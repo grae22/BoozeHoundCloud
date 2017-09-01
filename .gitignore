@@ -1,0 +1,9 @@
+*.user
+*.mdf
+*.ldf
+
+.vs/
+packages/
+deploy/
+bin/
+obj/
