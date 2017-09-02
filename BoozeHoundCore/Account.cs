@@ -1,4 +1,4 @@
-﻿using System;
+﻿using BoozeHoundCore.Utils;
 
 namespace BoozeHoundCore
 {
@@ -22,7 +22,7 @@ namespace BoozeHoundCore
 
     public void ApplyDebit(decimal value)
     {
-      ValidateValueIsNonZeroAndPositive(value);
+      Validation.ValueIsNonZeroAndPositive(value);
 
       Balance -= value;
     }
@@ -31,7 +31,7 @@ namespace BoozeHoundCore
 
     public void ApplyCredit(decimal value)
     {
-      ValidateValueIsNonZeroAndPositive(value);
+      Validation.ValueIsNonZeroAndPositive(value);
 
       Balance += value;
     }
@@ -40,19 +40,7 @@ namespace BoozeHoundCore
 
     public override string ToString()
     {
-      return $"Account: [Name=\"{Name}\", Type=\"{AccountType.Name}\", Balance={Balance:N2}]";
-    }
-
-    //-------------------------------------------------------------------------
-
-    private static void ValidateValueIsNonZeroAndPositive(decimal value)
-    {
-      if (value > 0)
-      {
-        return;
-      }
-
-      throw new ArgumentException("Value must be positive & non-zero.");
+      return $"Account: [Name=\"{Name}\", Type=\"{AccountType.Name}\", Balance={Balance:n2}]";
     }
 
     //-------------------------------------------------------------------------

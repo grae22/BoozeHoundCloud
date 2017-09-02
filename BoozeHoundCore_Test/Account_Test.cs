@@ -37,7 +37,7 @@ namespace BoozeHoundCore_Test
     [Test]
     public void InitialBalanceIsZero()
     {
-      Assert.AreEqual(0d, _testObject.Balance);
+      Assert.AreEqual(0m, _testObject.Balance);
     }
 
     //-------------------------------------------------------------------------
@@ -45,9 +45,9 @@ namespace BoozeHoundCore_Test
     [Test]
     public void ApplyDebit()
     {
-      _testObject.ApplyDebit(10);
+      _testObject.ApplyDebit(10m);
 
-      Assert.AreEqual(-10, _testObject.Balance);
+      Assert.AreEqual(-10m, _testObject.Balance);
     }
 
     //-------------------------------------------------------------------------
@@ -57,7 +57,7 @@ namespace BoozeHoundCore_Test
     {
       try
       {
-        _testObject.ApplyDebit(0);
+        _testObject.ApplyDebit(0m);
       }
       catch (ArgumentException)
       {
@@ -74,7 +74,7 @@ namespace BoozeHoundCore_Test
     {
       try
       {
-        _testObject.ApplyDebit(-1);
+        _testObject.ApplyDebit(-1m);
       }
       catch (ArgumentException)
       {
@@ -89,9 +89,9 @@ namespace BoozeHoundCore_Test
     [Test]
     public void ApplyCredit()
     {
-      _testObject.ApplyCredit(10);
+      _testObject.ApplyCredit(10m);
 
-      Assert.AreEqual(10, _testObject.Balance);
+      Assert.AreEqual(10m, _testObject.Balance);
     }
 
     //-------------------------------------------------------------------------
@@ -101,7 +101,7 @@ namespace BoozeHoundCore_Test
     {
       try
       {
-        _testObject.ApplyDebit(0);
+        _testObject.ApplyDebit(0m);
       }
       catch (ArgumentException)
       {
@@ -118,7 +118,7 @@ namespace BoozeHoundCore_Test
     {
       try
       {
-        _testObject.ApplyDebit(-1);
+        _testObject.ApplyDebit(-1m);
       }
       catch (ArgumentException)
       {
@@ -147,7 +147,7 @@ namespace BoozeHoundCore_Test
       _accountType.SetupGet(x => x.Name).Returns("TestAccountType");
 
       Assert.AreEqual(
-        $"Account: [Name=\"{_testObject.Name}\", Type=\"{_accountType.Object.Name}\", Balance={0:N2}]",
+        $"Account: [Name=\"{_testObject.Name}\", Type=\"{_accountType.Object.Name}\", Balance={0:n2}]",
         _testObject.ToString());
     }
 
