@@ -259,5 +259,26 @@ namespace BoozeHoundCore_Test
     }
 
     //-------------------------------------------------------------------------
+
+    [Test]
+    public void ToStringValue()
+    {
+      _debitAccount.SetupGet(x => x.Name).Returns("DebitAccount");
+      _creditAccount.SetupGet(x => x.Name).Returns("CreditAccount");
+
+      Assert.AreEqual(
+        "Transaction: [" +
+          $"Value={_value:N2}, " +
+          $"Debit=\"{_testObject.DebitAccount.Name}\", " +
+          $"Credit=\"{_testObject.CreditAccount.Name}\", " +
+          $"Reference=\"{_testObject.Reference}\", " +
+          $"Description=\"{_testObject.Description}\", " +
+          $"Date=\"{_testObject.Date:yyyy-MM-dd}\", " +
+          $"Created=\"{_testObject.CreatedTimestamp:yyyy-MM-dd HH:mm:ss}\", " +
+          "Processed=\"(null)\"]",
+        _testObject.ToString());
+    }
+
+    //-------------------------------------------------------------------------
   }
 }

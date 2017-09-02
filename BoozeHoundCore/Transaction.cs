@@ -25,6 +25,7 @@ namespace BoozeHoundCore
                        string reference,
                        string description,
                        DateTime date,
+                       // TODO: Created timestamp needs to be passed in, too.
                        DateTime? processedTimestamp = null)
     {
       Validation.ValueIsNonZeroAndPositive(value);
@@ -34,8 +35,8 @@ namespace BoozeHoundCore
       Value = value;
       DebitAccount = debitAccount;
       CreditAccount = creditAccount;
-      Reference = reference;
-      Description = description;
+      Reference = reference ?? "";
+      Description = description ?? "";
       Date = date;
       CreatedTimestamp = DateTime.UtcNow;
       ProcessedTimestamp = processedTimestamp;
@@ -53,6 +54,25 @@ namespace BoozeHoundCore
       DebitAccount.ApplyDebit(Value);
       CreditAccount.ApplyCredit(Value);
       MarkAsProcessed();
+    }
+
+    //-------------------------------------------------------------------------
+
+    public override string ToString()
+    {
+      string processedTimestamp =
+        (ProcessedTimestamp == null ? "(null)" : $"{ProcessedTimestamp:yyyy-MM-dd HH:mm:ss}");
+
+      return
+        "Transaction: [" +
+          $"Value={Value:N2}, " +
+          $"Debit=\"{DebitAccount.Name}\", " +
+          $"Credit=\"{CreditAccount.Name}\", " +
+          $"Reference=\"{Reference}\", " +
+          $"Description=\"{Description}\", " +
+          $"Date=\"{Date:yyyy-MM-dd}\", " +
+          $"Created=\"{CreatedTimestamp:yyyy-MM-dd HH:mm:ss}\", " +
+          $"Processed=\"{processedTimestamp}\"]";
     }
 
     //-------------------------------------------------------------------------
