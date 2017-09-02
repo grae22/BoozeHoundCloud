@@ -198,6 +198,10 @@
     <Compile Include="Migrations\201709021626125_Initial migration.Designer.cs">
       <DependentUpon>201709021626125_Initial migration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709021646276_SeedingAccountTypes.cs" />
+    <Compile Include="Migrations\201709021646276_SeedingAccountTypes.Designer.cs">
+      <DependentUpon>201709021646276_SeedingAccountTypes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Core\Account.cs" />
@@ -288,6 +292,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201709021626125_Initial migration.resx">
       <DependentUpon>201709021626125_Initial migration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709021646276_SeedingAccountTypes.resx">
+      <DependentUpon>201709021646276_SeedingAccountTypes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
