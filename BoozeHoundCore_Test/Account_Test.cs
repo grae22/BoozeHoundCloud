@@ -12,15 +12,24 @@ namespace BoozeHoundCore_Test
     //-------------------------------------------------------------------------
 
     private Account _testObject;
+    private Mock<IAccountType> _accountType;
 
     //-------------------------------------------------------------------------
 
     [SetUp]
     public void SetUp()
     {
-      var accountType = new Mock<IAccountType>();
+      _accountType = new Mock<IAccountType>();
+      _testObject = new Account("TestObject", _accountType.Object);
+    }
 
-      _testObject = new Account("TestObject", accountType.Object);
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void ConstructorParams()
+    {
+      Assert.AreEqual("TestObject", _testObject.Name);
+      Assert.AreSame(_accountType.Object, _testObject.AccountType);
     }
 
     //-------------------------------------------------------------------------
