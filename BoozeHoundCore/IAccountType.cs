@@ -1,6 +1,6 @@
 ﻿namespace BoozeHoundCore
 {
-  internal interface IAccountType
+  public interface IAccountType
   {
     //-------------------------------------------------------------------------
 

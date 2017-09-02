@@ -2,7 +2,7 @@
 
 namespace BoozeHoundCore.AccountTypes
 {
-  internal class BankAccount : IAccountType
+  public class BankAccount : IAccountType
   {
     //-------------------------------------------------------------------------
 
