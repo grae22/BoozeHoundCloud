@@ -1,4 +1,6 @@
-﻿using System;
+﻿// TODO: Ability to void the transaction.
+
+using System;
 using BoozeHoundCore.Utils;
 
 namespace BoozeHoundCore
@@ -7,14 +9,15 @@ namespace BoozeHoundCore
   {
     //-------------------------------------------------------------------------
 
-    public decimal Value { get; private set; }
-    public IAccount DebitAccount { get; private set; }
-    public IAccount CreditAccount { get; private set; }
-    public string Reference { get; private set; }
-    public string Description { get; private set; }
-    public DateTime Date { get; private set; }
-    public DateTime Timestamp { get; private set; }
+    public decimal Value { get; }
+    public IAccount DebitAccount { get; }
+    public IAccount CreditAccount { get; }
+    public string Reference { get; }
+    public string Description { get; }
+    public DateTime Date { get; }
+    public DateTime CreatedTimestamp { get; }
     public bool IsProcessed { get; private set; }
+    public DateTime? ProcessedTimestamp { get; private set; }
 
     //-------------------------------------------------------------------------
 
@@ -23,11 +26,14 @@ namespace BoozeHoundCore
                        IAccount creditAccount,
                        string reference,
                        string description,
-                       DateTime date)
+                       DateTime date,
+                       bool isProcessed = false,
+                       DateTime? processedTimestamp = null)
     {
       Validation.ValueIsNonZeroAndPositive(value);
       Validation.AccountNotNull(debitAccount);
       Validation.AccountNotNull(creditAccount);
+      ValidateProcessedParams(isProcessed, processedTimestamp);
 
       Value = value;
       DebitAccount = debitAccount;
@@ -35,14 +41,42 @@ namespace BoozeHoundCore
       Reference = reference;
       Description = description;
       Date = date;
-      Timestamp = DateTime.UtcNow;
+      CreatedTimestamp = DateTime.UtcNow;
+      IsProcessed = isProcessed;
+      ProcessedTimestamp = processedTimestamp;
     }
 
     //-------------------------------------------------------------------------
 
     public void Process()
     {
-      
+      if (IsProcessed)
+      {
+        return;
+      }
+
+      DebitAccount.ApplyDebit(Value);
+      CreditAccount.ApplyCredit(Value);
+      MarkAsProcessed();
+    }
+
+    //-------------------------------------------------------------------------
+
+    private static void ValidateProcessedParams(bool isProcessed, DateTime? processedTimestamp)
+    {
+      if (isProcessed &&
+          processedTimestamp == null)
+      {
+        throw new ArgumentException("Processed timestamp cannot be null if transaction is processed.");
+      }
+    }
+
+    //-------------------------------------------------------------------------
+
+    private void MarkAsProcessed()
+    {
+      IsProcessed = true;
+      ProcessedTimestamp = DateTime.UtcNow;
     }
 
     //-------------------------------------------------------------------------

@@ -12,8 +12,9 @@ namespace BoozeHoundCore
     string Reference { get; }
     string Description { get; }
     DateTime Date { get; }
-    DateTime Timestamp { get; }
+    DateTime CreatedTimestamp { get; }
     bool IsProcessed { get; }
+    DateTime? ProcessedTimestamp { get; }
 
     //-------------------------------------------------------------------------
 

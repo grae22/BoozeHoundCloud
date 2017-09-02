@@ -137,24 +137,35 @@ namespace BoozeHoundCore_Test
     [Test]
     public void ConstructorParams()
     {
+      _testObject = new Transaction(
+        _value,
+        _debitAccount.Object,
+        _creditAccount.Object,
+        _reference,
+        _description,
+        _date,
+        true,
+        DateTime.UtcNow);
+
       Assert.AreEqual(_value, _testObject.Value);
       Assert.AreSame(_debitAccount.Object, _testObject.DebitAccount);
       Assert.AreSame(_creditAccount.Object, _testObject.CreditAccount);
       Assert.AreEqual(_reference, _testObject.Reference);
       Assert.AreEqual(_description, _testObject.Description);
       Assert.AreEqual(_date, _testObject.Date);
+      Assert.True(_testObject.IsProcessed);
     }
 
     //-------------------------------------------------------------------------
 
     [Test]
-    public void TimestampRecordsObjectCreation()
+    public void CreatedTimestampRecordsObjectCreation()
     {
-      var lessThan5s = new TimeSpan(0, 0, 0, 5);
+      var fiveSeconds = new TimeSpan(0, 0, 0, 5);
 
-      TimeSpan timeSinceObjectInstantiated = (DateTime.UtcNow - _testObject.Timestamp);
+      TimeSpan timeSinceObjectInstantiated = (DateTime.UtcNow - _testObject.CreatedTimestamp);
 
-      Assert.Less(timeSinceObjectInstantiated, lessThan5s);
+      Assert.Less(timeSinceObjectInstantiated, fiveSeconds);
     }
 
     //-------------------------------------------------------------------------
@@ -163,6 +174,114 @@ namespace BoozeHoundCore_Test
     public void ProcessedFlagIsInitiallyFalse()
     {
       Assert.False(_testObject.IsProcessed);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void DebitAccountCorrectlyDebitedOnProcess()
+    {
+      _testObject.Process();
+
+      _debitAccount.Verify(x => x.ApplyDebit(_value), Times.Once);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void DebitAccountNotCreditedOnProcess()
+    {
+      _testObject.Process();
+
+      _debitAccount.Verify(x => x.ApplyCredit(It.IsAny<decimal>()), Times.Never);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void CreditAccountCorrectlyCreditedOnProcess()
+    {
+      _testObject.Process();
+
+      _creditAccount.Verify(x => x.ApplyCredit(_value), Times.Once);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void CreditAccountNotDebitedOnProcess()
+    {
+      _testObject.Process();
+
+      _creditAccount.Verify(x => x.ApplyDebit(It.IsAny<decimal>()), Times.Never);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void ProcessedFlagIsTrueAfterProcessCalled()
+    {
+      _testObject.Process();
+
+      Assert.True(_testObject.IsProcessed);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void DoNotProcessMultipleTimes()
+    {
+      _testObject.Process();
+      _testObject.Process();
+
+      _debitAccount.Verify(x => x.ApplyDebit(It.IsAny<decimal>()), Times.Once);
+      _creditAccount.Verify(x => x.ApplyCredit(It.IsAny<decimal>()), Times.Once);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void ProcessedTimestampIsNullBeforeProcessed()
+    {
+      Assert.Null(_testObject.ProcessedTimestamp);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void ProcessedTimestampRecordsWhenTransactionProcessed()
+    {
+      _testObject.Process();
+
+      var twoSeconds = new TimeSpan(0, 0, 0, 2);
+      TimeSpan timeSinceProcessed = (DateTime.UtcNow - (DateTime)_testObject.ProcessedTimestamp);
+
+      Assert.Less(timeSinceProcessed, twoSeconds);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void ExceptionThrownWhenTransactionProcessedAndTimestampIsNull()
+    {
+      try
+      {
+        new Transaction(
+          _value,
+          _debitAccount.Object,
+          _creditAccount.Object,
+          _reference,
+          _description,
+          _date,
+          true,
+          null);
+      }
+      catch (ArgumentException)
+      {
+        Assert.Pass();
+      }
+
+      Assert.Fail();
     }
 
     //-------------------------------------------------------------------------
