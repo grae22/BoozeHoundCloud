@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using BoozeHoundCloud.Dtos;
+using BoozeHoundCloud.Models.Core;
 
 namespace BoozeHoundCloud
 {
@@ -8,6 +10,10 @@ namespace BoozeHoundCloud
     {
       Mapper.Initialize(cfg =>
       {
+        cfg.CreateMap<Account, AccountDto>();
+
+        cfg.CreateMap<AccountDto, Account>()
+          .ForMember(m => m.AccountType, opt => opt.Ignore());
       });
 
       Mapper.AssertConfigurationIsValid();

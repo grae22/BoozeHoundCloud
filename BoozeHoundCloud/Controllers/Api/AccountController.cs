@@ -2,6 +2,9 @@
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using System.Web.UI.WebControls;
+using AutoMapper;
+using BoozeHoundCloud.Dtos;
 using BoozeHoundCloud.Models;
 using BoozeHoundCloud.Models.Core;
 
@@ -23,39 +26,55 @@ namespace BoozeHoundCloud.Controllers.Api
 
     //-------------------------------------------------------------------------
 
+    [HttpGet]
+    public IHttpActionResult GetAccount(int id)
+    {
+      // Account already exists with name?
+      Account account = _context.Accounts.FirstOrDefault(a => a.Id == id);
+
+      if (account == null)
+      {
+        return NotFound();
+      }
+
+      var accountDto = Mapper.Map<Account, AccountDto>(account);
+
+      return Json(accountDto);
+    }
+
+    //-------------------------------------------------------------------------
+
     [HttpPost]
-    public IHttpActionResult CreateAccount(NewAccount newAccount)
+    public IHttpActionResult CreateAccount(AccountDto accountDto)
     {
       // Account already exists with name?
       Account existingAccount =
         _context.Accounts.FirstOrDefault(
-          a => a.Name.Equals(newAccount.Name, StringComparison.OrdinalIgnoreCase));
+          a => a.Name.Equals(accountDto.Name, StringComparison.OrdinalIgnoreCase));
 
       if (existingAccount != null)
       {
-        return BadRequest($"Account already exists with name '{newAccount.Name}'.");
+        return BadRequest($"Account already exists with name '{accountDto.Name}'.");
       }
 
       // Get the account type.
-      AccountType accountType = _context.AccountTypes.FirstOrDefault(a => newAccount.AccountTypeId == a.Id);
+      AccountType accountType = _context.AccountTypes.FirstOrDefault(a => accountDto.AccountTypeId == a.Id);
 
       if (accountType == null)
       {
-        return BadRequest($"AccountType not found for id {newAccount.AccountTypeId}.");
+        return BadRequest($"AccountType not found for id {accountDto.AccountTypeId}.");
       }
 
       // Create new account object.
-      var account = new Account
-      {
-        Name = newAccount.Name,
-        AccountType = accountType,
-        AccountTypeId = accountType.Id
-      };
+      var newAccount = Mapper.Map<AccountDto, Account>(accountDto);
 
-      _context.Accounts.Add(account);
+      _context.Accounts.Add(newAccount);
       _context.SaveChanges();
 
-      return StatusCode(HttpStatusCode.NoContent);
+      return Created(
+        new Uri(
+          $"{Request.RequestUri}/{newAccount.Id}"),
+          newAccount);
     }
 
     //-------------------------------------------------------------------------
