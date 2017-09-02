@@ -25,7 +25,7 @@ namespace BoozeHoundCore
                        string reference,
                        string description,
                        DateTime date,
-                       // TODO: Created timestamp needs to be passed in, too.
+                       DateTime? createdTimestamp = null,
                        DateTime? processedTimestamp = null)
     {
       Validation.ValueIsNonZeroAndPositive(value);
@@ -38,7 +38,7 @@ namespace BoozeHoundCore
       Reference = reference ?? "";
       Description = description ?? "";
       Date = date;
-      CreatedTimestamp = DateTime.UtcNow;
+      CreatedTimestamp = createdTimestamp ?? DateTime.UtcNow;
       ProcessedTimestamp = processedTimestamp;
     }
 

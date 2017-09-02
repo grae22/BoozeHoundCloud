@@ -137,6 +137,9 @@ namespace BoozeHoundCore_Test
     [Test]
     public void ConstructorParams()
     {
+      var createdTimestamp = new DateTime(2017, 10, 2, 12, 30, 45);
+      var processedTimestamp = new DateTime(2018, 11, 3, 13, 31, 46);
+
       _testObject = new Transaction(
         _value,
         _debitAccount.Object,
@@ -144,7 +147,8 @@ namespace BoozeHoundCore_Test
         _reference,
         _description,
         _date,
-        DateTime.UtcNow);
+        createdTimestamp,
+        processedTimestamp);
 
       Assert.AreEqual(_value, _testObject.Value);
       Assert.AreSame(_debitAccount.Object, _testObject.DebitAccount);
@@ -153,6 +157,8 @@ namespace BoozeHoundCore_Test
       Assert.AreEqual(_description, _testObject.Description);
       Assert.AreEqual(_date, _testObject.Date);
       Assert.True(_testObject.IsProcessed);
+      Assert.AreEqual(createdTimestamp, _testObject.CreatedTimestamp);
+      Assert.AreEqual(processedTimestamp, _testObject.ProcessedTimestamp);
     }
 
     //-------------------------------------------------------------------------
