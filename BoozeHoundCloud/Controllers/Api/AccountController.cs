@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 using System.Web.Http;
-using System.Web.UI.WebControls;
 using AutoMapper;
 using BoozeHoundCloud.Dtos;
 using BoozeHoundCloud.Models;
@@ -12,14 +10,6 @@ namespace BoozeHoundCloud.Controllers.Api
 {
   public class AccountController : ApiController
   {
-    //-------------------------------------------------------------------------
-
-    public struct NewAccount
-    {
-      public string Name { get; set; }
-      public int AccountTypeId { get; set; }
-    }
-
     //-------------------------------------------------------------------------
 
     private readonly ApplicationDbContext _context = new ApplicationDbContext();
