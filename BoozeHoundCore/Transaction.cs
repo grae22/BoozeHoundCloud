@@ -1,6 +1,4 @@
-﻿// TODO: Ability to void the transaction.
-
-using System;
+﻿using System;
 using BoozeHoundCore.Utils;
 
 namespace BoozeHoundCore
@@ -16,7 +14,7 @@ namespace BoozeHoundCore
     public string Description { get; }
     public DateTime Date { get; }
     public DateTime CreatedTimestamp { get; }
-    public bool IsProcessed { get; private set; }
+    public bool IsProcessed => (ProcessedTimestamp != null);
     public DateTime? ProcessedTimestamp { get; private set; }
 
     //-------------------------------------------------------------------------
@@ -27,13 +25,11 @@ namespace BoozeHoundCore
                        string reference,
                        string description,
                        DateTime date,
-                       bool isProcessed = false,
                        DateTime? processedTimestamp = null)
     {
       Validation.ValueIsNonZeroAndPositive(value);
       Validation.AccountNotNull(debitAccount);
       Validation.AccountNotNull(creditAccount);
-      ValidateProcessedParams(isProcessed, processedTimestamp);
 
       Value = value;
       DebitAccount = debitAccount;
@@ -42,7 +38,6 @@ namespace BoozeHoundCore
       Description = description;
       Date = date;
       CreatedTimestamp = DateTime.UtcNow;
-      IsProcessed = isProcessed;
       ProcessedTimestamp = processedTimestamp;
     }
 
@@ -61,21 +56,9 @@ namespace BoozeHoundCore
     }
 
     //-------------------------------------------------------------------------
-
-    private static void ValidateProcessedParams(bool isProcessed, DateTime? processedTimestamp)
-    {
-      if (isProcessed &&
-          processedTimestamp == null)
-      {
-        throw new ArgumentException("Processed timestamp cannot be null if transaction is processed.");
-      }
-    }
-
-    //-------------------------------------------------------------------------
-
+    
     private void MarkAsProcessed()
     {
-      IsProcessed = true;
       ProcessedTimestamp = DateTime.UtcNow;
     }
 

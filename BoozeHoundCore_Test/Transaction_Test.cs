@@ -144,7 +144,6 @@ namespace BoozeHoundCore_Test
         _reference,
         _description,
         _date,
-        true,
         DateTime.UtcNow);
 
       Assert.AreEqual(_value, _testObject.Value);
@@ -257,31 +256,6 @@ namespace BoozeHoundCore_Test
       TimeSpan timeSinceProcessed = (DateTime.UtcNow - (DateTime)_testObject.ProcessedTimestamp);
 
       Assert.Less(timeSinceProcessed, twoSeconds);
-    }
-
-    //-------------------------------------------------------------------------
-
-    [Test]
-    public void ExceptionThrownWhenTransactionProcessedAndTimestampIsNull()
-    {
-      try
-      {
-        new Transaction(
-          _value,
-          _debitAccount.Object,
-          _creditAccount.Object,
-          _reference,
-          _description,
-          _date,
-          true,
-          null);
-      }
-      catch (ArgumentException)
-      {
-        Assert.Pass();
-      }
-
-      Assert.Fail();
     }
 
     //-------------------------------------------------------------------------
