@@ -129,5 +129,17 @@ namespace BoozeHoundCore_Test
     }
 
     //-------------------------------------------------------------------------
+
+    [Test]
+    public void ToStringValue()
+    {
+      _accountType.SetupGet(x => x.Name).Returns("TestAccountType");
+
+      Assert.AreEqual(
+        $"Account: [Name=\"{_testObject.Name}\", Type=\"{_accountType.Object.Name}\", Balance={0:N2}]",
+        _testObject.ToString());
+    }
+
+    //-------------------------------------------------------------------------
   }
 }

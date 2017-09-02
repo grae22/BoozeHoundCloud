@@ -38,6 +38,13 @@ namespace BoozeHoundCore
 
     //-------------------------------------------------------------------------
 
+    public override string ToString()
+    {
+      return $"Account: [Name=\"{Name}\", Type=\"{AccountType.Name}\", Balance={Balance:N2}]";
+    }
+
+    //-------------------------------------------------------------------------
+
     private static void ValidateValueIsNonZeroAndPositive(decimal value)
     {
       if (value > 0)
