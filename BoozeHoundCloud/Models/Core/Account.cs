@@ -6,9 +6,13 @@ namespace BoozeHoundCloud.Models.Core
   {
     //-------------------------------------------------------------------------
 
+    public const int NAME_MAX_LENGTH = 64;
+
+    //-------------------------------------------------------------------------
+
     public int Id { get; set; }
 
-    [MaxLength(64)]
+    [MaxLength(NAME_MAX_LENGTH)]
     public string Name { get; set; }
 
     public AccountType AccountType { get; set; }
