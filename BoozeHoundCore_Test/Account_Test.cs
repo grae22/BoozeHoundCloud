@@ -131,6 +131,17 @@ namespace BoozeHoundCore_Test
     //-------------------------------------------------------------------------
 
     [Test]
+    public void DebitAndCredit()
+    {
+      _testObject.ApplyDebit(10.15m);
+      _testObject.ApplyCredit(10.15m);
+
+      Assert.AreEqual(0m, _testObject.Balance);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
     public void ToStringValue()
     {
       _accountType.SetupGet(x => x.Name).Returns("TestAccountType");
