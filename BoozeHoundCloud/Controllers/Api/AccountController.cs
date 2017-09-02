@@ -13,8 +13,8 @@ namespace BoozeHoundCloud.Controllers.Api
 
     public struct NewAccount
     {
-      public string name { get; set; }
-      public int accountTypeId { get; set; }
+      public string Name { get; set; }
+      public int AccountTypeId { get; set; }
     }
 
     //-------------------------------------------------------------------------
@@ -29,25 +29,25 @@ namespace BoozeHoundCloud.Controllers.Api
       // Account already exists with name?
       Account existingAccount =
         _context.Accounts.FirstOrDefault(
-          a => a.Name.Equals(newAccount.name, StringComparison.OrdinalIgnoreCase));
+          a => a.Name.Equals(newAccount.Name, StringComparison.OrdinalIgnoreCase));
 
       if (existingAccount != null)
       {
-        return BadRequest($"Account already exists with name '{newAccount.name}'.");
+        return BadRequest($"Account already exists with name '{newAccount.Name}'.");
       }
 
       // Get the account type.
-      AccountType accountType = _context.AccountTypes.FirstOrDefault(a => newAccount.accountTypeId == a.Id);
+      AccountType accountType = _context.AccountTypes.FirstOrDefault(a => newAccount.AccountTypeId == a.Id);
 
       if (accountType == null)
       {
-        return BadRequest($"AccountType not found for id {newAccount.accountTypeId}.");
+        return BadRequest($"AccountType not found for id {newAccount.AccountTypeId}.");
       }
 
       // Create new account object.
       var account = new Account
       {
-        Name = newAccount.name,
+        Name = newAccount.Name,
         AccountType = accountType,
         AccountTypeId = accountType.Id
       };
