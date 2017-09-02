@@ -194,6 +194,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709021626125_Initial migration.cs" />
+    <Compile Include="Migrations\201709021626125_Initial migration.Designer.cs">
+      <DependentUpon>201709021626125_Initial migration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Core\Account.cs" />
     <Compile Include="Models\Core\AccountType.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -278,6 +284,11 @@
       <Project>{b6900931-d930-4cf0-a875-e33778111917}</Project>
       <Name>BoozeHoundCore</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201709021626125_Initial migration.resx">
+      <DependentUpon>201709021626125_Initial migration.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
