@@ -197,6 +197,9 @@
     <Compile Include="Controllers\Api\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="DAL\AccountTypeRepository.cs" />
+    <Compile Include="DAL\AccountRepository.cs" />
+    <Compile Include="DAL\IRepository.cs" />
     <Compile Include="Dtos\AccountDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
