@@ -3,63 +3,63 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using BoozeHoundCloud.Models;
-using BoozeHoundCloud.Models.Core;
 
 namespace BoozeHoundCloud.DAL
 {
-  public class AccountRepository : IRepository<Account>
+  public class GenericRepository<T> : IRepository<T> where T : class
   {
     //-------------------------------------------------------------------------
 
-    private readonly ApplicationDbContext _context;
+    private readonly DbContext _context;
+    private readonly DbSet<T> _dbSet;
     private bool _disposed;
 
     //-------------------------------------------------------------------------
 
-    public AccountRepository(ApplicationDbContext context)
+    public GenericRepository(DbContext context)
     {
       _context = context;
+      _dbSet = _context.Set<T>();
     }
 
     //-------------------------------------------------------------------------
 
-    public IEnumerable<Account> Get()
+    public IEnumerable<T> Get()
     {
-      return _context.Accounts.ToList();
+      return _dbSet.ToList();
     }
 
     //-------------------------------------------------------------------------
 
-    public Account Get(int id)
+    public T Get(int id)
     {
-      return _context.Accounts.Find(id);
+      return _dbSet.Find(id);
     }
 
     //-------------------------------------------------------------------------
 
-    public Account Get(Expression<Func<Account, bool>> where)
+    public T Get(Expression<Func<T, bool>> where)
     {
-      return _context.Accounts.FirstOrDefault(where);
+      return _dbSet.FirstOrDefault(where);
     }
 
     //-------------------------------------------------------------------------
 
-    public void Add(Account accountType)
+    public void Add(T accountType)
     {
-      _context.Accounts.Add(accountType);
+      _dbSet.Add(accountType);
     }
 
     //-------------------------------------------------------------------------
 
     public void Delete(int id)
     {
-      _context.Accounts.Remove(Get(id));
+      _dbSet.Remove(Get(id));
     }
 
     //-------------------------------------------------------------------------
 
-    public void Update(Account accountType)
+    public void Update(T accountType)
     {
       _context.Entry(accountType).State = EntityState.Modified;
     }

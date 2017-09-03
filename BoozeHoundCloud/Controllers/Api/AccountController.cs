@@ -20,8 +20,8 @@ namespace BoozeHoundCloud.Controllers.Api
     public AccountController()
     {
       var applicationDbContext = new ApplicationDbContext();
-      _accountRepository = new AccountRepository(applicationDbContext);
-      _accountTypeRepository = new AccountTypeRepository(applicationDbContext);
+      _accountRepository = new GenericRepository<Account>(applicationDbContext);
+      _accountTypeRepository = new GenericRepository<AccountType>(applicationDbContext);
     }
 
     //-------------------------------------------------------------------------
