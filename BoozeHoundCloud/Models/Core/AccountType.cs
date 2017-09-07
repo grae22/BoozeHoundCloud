@@ -2,7 +2,13 @@
 
 namespace BoozeHoundCloud.Models.Core
 {
-  public class AccountType
+  public interface IAccountType
+  {
+    int Id { get; set; }
+    string Name { get; set; }
+  }
+
+  public class AccountType : IAccountType
   {
     //-------------------------------------------------------------------------
 

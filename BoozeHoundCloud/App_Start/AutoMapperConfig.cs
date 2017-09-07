@@ -10,9 +10,10 @@ namespace BoozeHoundCloud
     {
       Mapper.Initialize(cfg =>
       {
-        cfg.CreateMap<Account, AccountDto>();
+        //cfg.CreateMap<Account, AccountDto>();
+        cfg.CreateMap<IAccount, AccountDto>();
 
-        cfg.CreateMap<AccountDto, Account>()
+        cfg.CreateMap<AccountDto, IAccount>()
           .ForMember(m => m.AccountType, opt => opt.Ignore());
       });
 

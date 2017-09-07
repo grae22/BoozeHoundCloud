@@ -4,13 +4,14 @@ using BoozeHoundCloud.Models.Core;
 
 namespace BoozeHoundCloud.Models
 {
-  public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+  public class ApplicationDbContext : IdentityDbContext<ApplicationUser>,
+                                      IApplicationDbContext
   {
     //-------------------------------------------------------------------------
 
-    public DbSet<AccountType> AccountTypes { get; set; }
-    public DbSet<Account> Accounts { get; set; }
-    public DbSet<Transaction> Transactions { get; set; }
+    public virtual IDbSet<AccountType> AccountTypes { get; set; }
+    public virtual IDbSet<Account> Accounts { get; set; }
+    public virtual IDbSet<Transaction> Transactions { get; set; }
 
     //-------------------------------------------------------------------------
 
