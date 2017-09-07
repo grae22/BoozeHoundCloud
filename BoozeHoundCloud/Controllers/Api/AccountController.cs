@@ -43,7 +43,7 @@ namespace BoozeHoundCloud.Controllers.Api
 
       var accountDto = Mapper.Map<IAccount, AccountDto>(account);
 
-      return Json(accountDto);
+      return Ok(accountDto);
     }
 
     //-------------------------------------------------------------------------
