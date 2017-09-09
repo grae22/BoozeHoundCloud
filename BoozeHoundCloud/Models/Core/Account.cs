@@ -2,7 +2,7 @@
 
 namespace BoozeHoundCloud.Models.Core
 {
-  public class Account : IAccount
+  public class Account
   {
     //-------------------------------------------------------------------------
 

@@ -40,7 +40,6 @@ namespace BoozeHoundCloud.Controllers.Api
     [HttpGet]
     public IHttpActionResult GetAccount(int id)
     {
-      // Account already exists with name?
       Account account = _accounts.Get(id);
 
       if (account == null)
@@ -69,7 +68,7 @@ namespace BoozeHoundCloud.Controllers.Api
       }
 
       // Get the account type.
-      IAccountType accountType = _accountTypes.Get(accountDto.AccountTypeId);
+      AccountType accountType = _accountTypes.Get(accountDto.AccountTypeId);
 
       if (accountType == null)
       {

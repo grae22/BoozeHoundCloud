@@ -213,8 +213,6 @@
       <DependentUpon>201709021646276_SeedingAccountTypes.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Core\IAccount.cs" />
-    <Compile Include="Models\Core\IAccountType.cs" />
     <Compile Include="Models\IApplicationDbContext.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Core\Account.cs" />
