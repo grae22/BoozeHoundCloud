@@ -45,6 +45,8 @@ namespace BoozeHoundCloud_Test.Controllers.Api
         _context.Object,
         _accounts.Object,
         _accountTypes.Object);
+
+      _testObject.Request = new HttpRequestMessage(new HttpMethod("POST"), new Uri("http://localhost"));
     }
 
     //-------------------------------------------------------------------------
@@ -87,8 +89,6 @@ namespace BoozeHoundCloud_Test.Controllers.Api
     [Test]
     public void CreateAccount()
     {
-      _testObject.Request = new HttpRequestMessage(new HttpMethod("POST"), new Uri("http://localhost"));
-
       _accounts.Setup(x => x.Get(It.IsAny<Expression<Func<Account, bool>>>()))
         .Returns<Account>(null);
 
@@ -102,9 +102,58 @@ namespace BoozeHoundCloud_Test.Controllers.Api
         Balance = 1.23m
       };
 
-      _testObject.CreateAccount(accountDto);
+      var result = _testObject.CreateAccount(accountDto);
+
+      Assert.IsInstanceOf<CreatedNegotiatedContentResult<Account>>(result);
 
       _accounts.Verify(x => x.Save(), Times.Once);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void BadRequestOnCreateIfAccountAlreadyExists()
+    {
+      _accounts.Setup(x => x.Get(It.IsAny<Expression<Func<Account, bool>>>()))
+        .Returns(new Account());
+
+      var accountDto = new AccountDto
+      {
+        Name = "TestAccount"
+      };
+
+      var result = _testObject.CreateAccount(accountDto);
+
+      Assert.IsInstanceOf<BadRequestErrorMessageResult>(result);
+      StringAssert.Contains("already exists", ((BadRequestErrorMessageResult)result).Message);
+
+      _accounts.Verify(x => x.Save(), Times.Never);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void BadRequestOnCreateIfAccountTypeNotFound()
+    {
+      _accounts.Setup(
+        x => x.Get(It.IsAny<Expression<Func<Account, bool>>>()))
+          .Returns<Account>(null);
+
+      _accountTypes.Setup(
+        x => x.Get(It.IsAny<int>()))
+          .Returns<AccountType>(null);
+
+      var accountDto = new AccountDto
+      {
+        AccountTypeId = 1,
+      };
+
+      var result = _testObject.CreateAccount(accountDto);
+
+      Assert.IsInstanceOf<BadRequestErrorMessageResult>(result);
+      StringAssert.Contains("not found", ((BadRequestErrorMessageResult)result).Message);
+
+      _accounts.Verify(x => x.Save(), Times.Never);
     }
 
     //-------------------------------------------------------------------------

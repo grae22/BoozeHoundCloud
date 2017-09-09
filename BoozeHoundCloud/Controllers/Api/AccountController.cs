@@ -43,14 +43,14 @@ namespace BoozeHoundCloud.Controllers.Api
     public IHttpActionResult GetAccount(int id)
     {
       // Account already exists with name?
-      IAccount account = _accounts.Get(id);
+      Account account = _accounts.Get(id);
 
       if (account == null)
       {
         return NotFound();
       }
 
-      var accountDto = Mapper.Map<IAccount, AccountDto>(account);
+      var accountDto = Mapper.Map<Account, AccountDto>(account);
 
       return Ok(accountDto);
     }
@@ -61,8 +61,9 @@ namespace BoozeHoundCloud.Controllers.Api
     public IHttpActionResult CreateAccount(AccountDto accountDto)
     {
       // Account already exists with name?
-      IAccount existingAccount = _accounts.Get(
-        a => a.Name.Equals(accountDto.Name, StringComparison.OrdinalIgnoreCase));
+      Account existingAccount =
+        _accounts.Get(
+          a => a.Name.Equals(accountDto.Name, StringComparison.OrdinalIgnoreCase));
 
       if (existingAccount != null)
       {
