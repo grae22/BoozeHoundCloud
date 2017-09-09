@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Web.Http;
 using AutoMapper;
 using BoozeHoundCloud.DAL;
@@ -22,8 +21,8 @@ namespace BoozeHoundCloud.Controllers.Api
     {
       var context = new ApplicationDbContext();
 
-      _accounts = new AccountRepository(context);
-      _accountTypes = new AccountTypeRepository(context);
+      _accounts = new GenericRepository<Account>(context);
+      _accountTypes = new GenericRepository<AccountType>(context);
     }
 
     //-------------------------------------------------------------------------
