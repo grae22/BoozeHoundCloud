@@ -2,26 +2,17 @@
 
 namespace BoozeHoundCloud.Models.Core
 {
-  public interface IAccount
-  {
-    int Id { get; set; }
-    string Name { get; set; }
-    AccountType AccountType { get; set; }
-    int AccountTypeId { get; set; }
-    decimal Balance { get; set; }
-  }
-
   public class Account : IAccount
   {
     //-------------------------------------------------------------------------
 
-    public const int NAME_MAX_LENGTH = 64;
+    public const int NameMaxLength = 64;
 
     //-------------------------------------------------------------------------
 
     public int Id { get; set; }
 
-    [MaxLength(NAME_MAX_LENGTH)]
+    [MaxLength(NameMaxLength)]
     public string Name { get; set; }
 
     public AccountType AccountType { get; set; }

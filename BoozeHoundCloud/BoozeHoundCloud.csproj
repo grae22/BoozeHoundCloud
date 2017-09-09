@@ -197,6 +197,9 @@
     <Compile Include="Controllers\Api\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="DAL\AccountTypeRepository.cs" />
+    <Compile Include="DAL\AccountRepository.cs" />
+    <Compile Include="DAL\IRepository.cs" />
     <Compile Include="Dtos\AccountDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -210,6 +213,8 @@
       <DependentUpon>201709021646276_SeedingAccountTypes.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Core\IAccount.cs" />
+    <Compile Include="Models\Core\IAccountType.cs" />
     <Compile Include="Models\IApplicationDbContext.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Core\Account.cs" />

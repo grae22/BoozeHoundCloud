@@ -13,7 +13,7 @@ namespace BoozeHoundCloud
         //cfg.CreateMap<Account, AccountDto>();
         cfg.CreateMap<IAccount, AccountDto>();
 
-        cfg.CreateMap<AccountDto, IAccount>()
+        cfg.CreateMap<AccountDto, Account>()
           .ForMember(m => m.AccountType, opt => opt.Ignore());
       });
 

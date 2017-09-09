@@ -9,9 +9,9 @@ namespace BoozeHoundCloud.Models
   {
     //-------------------------------------------------------------------------
 
-    public virtual IDbSet<AccountType> AccountTypes { get; set; }
-    public virtual IDbSet<Account> Accounts { get; set; }
-    public virtual IDbSet<Transaction> Transactions { get; set; }
+    public IDbSet<AccountType> AccountTypes { get; set; }
+    public IDbSet<Account> Accounts { get; set; }
+    public IDbSet<Transaction> Transactions { get; set; }
 
     //-------------------------------------------------------------------------
 

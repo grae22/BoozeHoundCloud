@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Http;
 using AutoMapper;
+using BoozeHoundCloud.DAL;
 using BoozeHoundCloud.Dtos;
 using BoozeHoundCloud.Models;
 using BoozeHoundCloud.Models.Core;
@@ -13,19 +14,27 @@ namespace BoozeHoundCloud.Controllers.Api
     //-------------------------------------------------------------------------
 
     private readonly IApplicationDbContext _context;
+    private readonly IRepository<Account> _accounts;
+    private readonly IRepository<AccountType> _accountTypes;
 
     //-------------------------------------------------------------------------
 
     public AccountController()
     {
       _context = new ApplicationDbContext();
+      _accounts = new AccountRepository(_context);
+      _accountTypes = new AccountTypeRepository(_context);
     }
 
     //-------------------------------------------------------------------------
 
-    public AccountController(IApplicationDbContext context)
+    public AccountController(IApplicationDbContext context,
+                             IRepository<Account> accounts,
+                             IRepository<AccountType> accountTypes)
     {
       _context = context;
+      _accounts = accounts;
+      _accountTypes = accountTypes;
     }
 
     //-------------------------------------------------------------------------
@@ -34,7 +43,7 @@ namespace BoozeHoundCloud.Controllers.Api
     public IHttpActionResult GetAccount(int id)
     {
       // Account already exists with name?
-      IAccount account = _context.Accounts.Find(id);
+      IAccount account = _accounts.Get(id);
 
       if (account == null)
       {
@@ -52,9 +61,8 @@ namespace BoozeHoundCloud.Controllers.Api
     public IHttpActionResult CreateAccount(AccountDto accountDto)
     {
       // Account already exists with name?
-      IAccount existingAccount =
-        _context.Accounts.FirstOrDefault(
-          a => a.Name.Equals(accountDto.Name, StringComparison.OrdinalIgnoreCase));
+      IAccount existingAccount = _accounts.Get(
+        a => a.Name.Equals(accountDto.Name, StringComparison.OrdinalIgnoreCase));
 
       if (existingAccount != null)
       {
@@ -62,7 +70,7 @@ namespace BoozeHoundCloud.Controllers.Api
       }
 
       // Get the account type.
-      IAccountType accountType = _context.AccountTypes.Find(accountDto.AccountTypeId);
+      IAccountType accountType = _accountTypes.Get(accountDto.AccountTypeId);
 
       if (accountType == null)
       {
@@ -72,8 +80,8 @@ namespace BoozeHoundCloud.Controllers.Api
       // Create new account object.
       var newAccount = Mapper.Map<AccountDto, Account>(accountDto);
 
-      _context.Accounts.Add(newAccount);
-      _context.SaveChanges();
+      _accounts.Add(newAccount);
+      _accounts.Save();
 
       return Created(
         new Uri(

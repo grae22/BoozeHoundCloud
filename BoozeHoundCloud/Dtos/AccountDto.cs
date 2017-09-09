@@ -9,7 +9,7 @@ namespace BoozeHoundCloud.Dtos
 
     public int Id { get; set; }
 
-    [MaxLength(Account.NAME_MAX_LENGTH)]
+    [MaxLength(Account.NameMaxLength)]
     public string Name { get; set; }
 
     public int AccountTypeId { get; set; }
