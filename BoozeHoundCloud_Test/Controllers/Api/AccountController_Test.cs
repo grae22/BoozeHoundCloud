@@ -10,7 +10,6 @@ using BoozeHoundCloud;
 using BoozeHoundCloud.Controllers.Api;
 using BoozeHoundCloud.DAL;
 using BoozeHoundCloud.Dtos;
-using BoozeHoundCloud.Models;
 using BoozeHoundCloud.Models.Core;
 
 namespace BoozeHoundCloud_Test.Controllers.Api
@@ -22,7 +21,6 @@ namespace BoozeHoundCloud_Test.Controllers.Api
     //-------------------------------------------------------------------------
 
     private AccountController _testObject;
-    private Mock<IApplicationDbContext> _context;
     private Mock<IRepository<Account>> _accounts;
     private Mock<IRepository<AccountType>> _accountTypes;
 
@@ -36,13 +34,7 @@ namespace BoozeHoundCloud_Test.Controllers.Api
       _accounts = new Mock<IRepository<Account>>();
       _accountTypes = new Mock<IRepository<AccountType>>();
 
-      _context = new Mock<IApplicationDbContext>
-      {
-        CallBase = false
-      };
-       
       _testObject = new AccountController(
-        _context.Object,
         _accounts.Object,
         _accountTypes.Object);
 

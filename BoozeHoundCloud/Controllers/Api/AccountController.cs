@@ -13,7 +13,6 @@ namespace BoozeHoundCloud.Controllers.Api
   {
     //-------------------------------------------------------------------------
 
-    private readonly IApplicationDbContext _context;
     private readonly IRepository<Account> _accounts;
     private readonly IRepository<AccountType> _accountTypes;
 
@@ -21,18 +20,17 @@ namespace BoozeHoundCloud.Controllers.Api
 
     public AccountController()
     {
-      _context = new ApplicationDbContext();
-      _accounts = new AccountRepository(_context);
-      _accountTypes = new AccountTypeRepository(_context);
+      var context = new ApplicationDbContext();
+
+      _accounts = new AccountRepository(context);
+      _accountTypes = new AccountTypeRepository(context);
     }
 
     //-------------------------------------------------------------------------
 
-    public AccountController(IApplicationDbContext context,
-                             IRepository<Account> accounts,
+    public AccountController(IRepository<Account> accounts,
                              IRepository<AccountType> accountTypes)
     {
-      _context = context;
       _accounts = accounts;
       _accountTypes = accountTypes;
     }
