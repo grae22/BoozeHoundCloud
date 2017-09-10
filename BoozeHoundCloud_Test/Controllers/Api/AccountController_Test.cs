@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Linq.Expressions;
 using System.Net.Http;
 using System.Web.Http.Results;
 using NUnit.Framework;
 using Moq;
 using BoozeHoundCloud;
 using BoozeHoundCloud.Controllers.Api;
-using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.DataTransferObjects;
 using BoozeHoundCloud.Models.Core;
+using BoozeHoundCloud.Services;
 
 namespace BoozeHoundCloud_Test.Controllers.Api
 {
@@ -19,8 +18,7 @@ namespace BoozeHoundCloud_Test.Controllers.Api
     //-------------------------------------------------------------------------
 
     private AccountController _testObject;
-    private Mock<IRepository<Account>> _accounts;
-    private Mock<IRepository<AccountType>> _accountTypes;
+    private Mock<IAccountService> _accounts;
 
     //-------------------------------------------------------------------------
 
@@ -29,12 +27,9 @@ namespace BoozeHoundCloud_Test.Controllers.Api
     {
       AutoMapperConfig.Initialise();
 
-      _accounts = new Mock<IRepository<Account>>();
-      _accountTypes = new Mock<IRepository<AccountType>>();
+      _accounts = new Mock<IAccountService>();
 
-      _testObject = new AccountController(
-        _accounts.Object,
-        _accountTypes.Object);
+      _testObject = new AccountController(_accounts.Object);
 
       _testObject.Request = new HttpRequestMessage(new HttpMethod("POST"), new Uri("http://localhost"));
     }
@@ -49,7 +44,7 @@ namespace BoozeHoundCloud_Test.Controllers.Api
       account.Object.AccountTypeId = 456;
       account.Object.Balance = 1.23m;
 
-      _accounts.Setup(x => x.Get(123)).Returns(account.Object);
+      _accounts.Setup(x => x.GetAccount(123)).Returns(account.Object);
 
       var result = _testObject.GetAccount(123);
 
@@ -67,7 +62,7 @@ namespace BoozeHoundCloud_Test.Controllers.Api
     [Test]
     public void GetAccountWithIdNotFound()
     {
-      _accounts.Setup(x => x.Get(123)).Returns<Account>(null);
+      _accounts.Setup(x => x.GetAccount(123)).Returns<Account>(null);
 
       var result = _testObject.GetAccount(123);
 
@@ -79,71 +74,37 @@ namespace BoozeHoundCloud_Test.Controllers.Api
     [Test]
     public void CreateAccount()
     {
-      _accounts.Setup(x => x.Get(It.IsAny<Expression<Func<Account, bool>>>()))
-        .Returns<Account>(null);
+      _accounts.Setup(x => x.AddAccount(It.IsAny<AccountDto>()))
+        .Returns(new Account());
 
-      _accountTypes.Setup(x => x.Get(1))
-        .Returns(new Mock<AccountType>().Object);
-
-      var accountDto = new AccountDto
-      {
-        Name = "TestAccount",
-        AccountTypeId = 1,
-        Balance = 1.23m
-      };
-
-      var result = _testObject.CreateAccount(accountDto);
+      var result = _testObject.CreateAccount(new AccountDto());
 
       Assert.IsInstanceOf<CreatedNegotiatedContentResult<Account>>(result);
 
-      _accounts.Verify(x => x.Save(), Times.Once);
+      _accounts.Verify(x => x.AddAccount(It.IsAny<AccountDto>()), Times.Once);
     }
 
     //-------------------------------------------------------------------------
 
     [Test]
-    public void BadRequestOnCreateIfAccountAlreadyExists()
+    public void CreateAccountBadRequestOnAccountServiceReturnsNullAccount()
     {
-      _accounts.Setup(x => x.Get(It.IsAny<Expression<Func<Account, bool>>>()))
-        .Returns(new Account());
-
-      var accountDto = new AccountDto
-      {
-        Name = "TestAccount"
-      };
-
-      var result = _testObject.CreateAccount(accountDto);
+      var result = _testObject.CreateAccount(new AccountDto());
 
       Assert.IsInstanceOf<BadRequestErrorMessageResult>(result);
-      StringAssert.Contains("already exists", ((BadRequestErrorMessageResult)result).Message);
-
-      _accounts.Verify(x => x.Save(), Times.Never);
     }
 
     //-------------------------------------------------------------------------
 
     [Test]
-    public void BadRequestOnCreateIfAccountTypeNotFound()
+    public void CreateAccountBadRequestOnAccountServiceException()
     {
-      _accounts.Setup(
-        x => x.Get(It.IsAny<Expression<Func<Account, bool>>>()))
-          .Returns<Account>(null);
+      _accounts.Setup(x => x.AddAccount(It.IsAny<AccountDto>()))
+        .Throws<ArgumentException>();
 
-      _accountTypes.Setup(
-        x => x.Get(It.IsAny<int>()))
-          .Returns<AccountType>(null);
-
-      var accountDto = new AccountDto
-      {
-        AccountTypeId = 1,
-      };
-
-      var result = _testObject.CreateAccount(accountDto);
+      var result = _testObject.CreateAccount(new AccountDto());
 
       Assert.IsInstanceOf<BadRequestErrorMessageResult>(result);
-      StringAssert.Contains("not found", ((BadRequestErrorMessageResult)result).Message);
-
-      _accounts.Verify(x => x.Save(), Times.Never);
     }
 
     //-------------------------------------------------------------------------

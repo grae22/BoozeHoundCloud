@@ -5,6 +5,7 @@ using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.DataTransferObjects;
 using BoozeHoundCloud.Models;
 using BoozeHoundCloud.Models.Core;
+using BoozeHoundCloud.Services;
 
 namespace BoozeHoundCloud.Controllers.Api
 {
@@ -12,26 +13,24 @@ namespace BoozeHoundCloud.Controllers.Api
   {
     //-------------------------------------------------------------------------
 
-    private readonly IRepository<Account> _accounts;
-    private readonly IRepository<AccountType> _accountTypes;
+    private readonly IAccountService _accounts;
 
     //-------------------------------------------------------------------------
 
     public AccountController()
     {
       var context = new ApplicationDbContext();
+      var accounts = new GenericRepository<Account>(context);
+      var accountTypes = new GenericRepository<AccountType>(context);
 
-      _accounts = new GenericRepository<Account>(context);
-      _accountTypes = new GenericRepository<AccountType>(context);
+      _accounts = new AccountService(accounts, accountTypes);
     }
 
     //-------------------------------------------------------------------------
 
-    public AccountController(IRepository<Account> accounts,
-                             IRepository<AccountType> accountTypes)
+    public AccountController(IAccountService accounts)
     {
       _accounts = accounts;
-      _accountTypes = accountTypes;
     }
 
     //-------------------------------------------------------------------------
@@ -39,7 +38,7 @@ namespace BoozeHoundCloud.Controllers.Api
     [HttpGet]
     public IHttpActionResult GetAccount(int id)
     {
-      Account account = _accounts.Get(id);
+      Account account = _accounts.GetAccount(id);
 
       if (account == null)
       {
@@ -56,34 +55,24 @@ namespace BoozeHoundCloud.Controllers.Api
     [HttpPost]
     public IHttpActionResult CreateAccount(AccountDto accountDto)
     {
-      // Account already exists with name?
-      Account existingAccount =
-        _accounts.Get(
-          a => a.Name.Equals(accountDto.Name, StringComparison.OrdinalIgnoreCase));
-
-      if (existingAccount != null)
+      try
       {
-        return BadRequest($"Account already exists with name '{accountDto.Name}'.");
+        Account newAccount = _accounts.AddAccount(accountDto);
+
+        if (newAccount == null)
+        {
+          return BadRequest($"Failed to add new account '{accountDto.Name}'.");
+        }
+
+        return Created(
+          new Uri(
+            $"{Request.RequestUri}/{newAccount.Id}"),
+            newAccount);
       }
-
-      // Get the account type.
-      AccountType accountType = _accountTypes.Get(accountDto.AccountTypeId);
-
-      if (accountType == null)
+      catch (ArgumentException ex)
       {
-        return BadRequest($"AccountType not found for id {accountDto.AccountTypeId}.");
+        return BadRequest(ex.Message);
       }
-
-      // Create new account object.
-      var newAccount = Mapper.Map<AccountDto, Account>(accountDto);
-
-      _accounts.Add(newAccount);
-      _accounts.Save();
-
-      return Created(
-        new Uri(
-          $"{Request.RequestUri}/{newAccount.Id}"),
-          newAccount);
     }
 
     //-------------------------------------------------------------------------

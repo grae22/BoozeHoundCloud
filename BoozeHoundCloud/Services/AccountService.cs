@@ -1,11 +1,12 @@
 ﻿using System;
+using AutoMapper;
 using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.DataTransferObjects;
 using BoozeHoundCloud.Models.Core;
 
 namespace BoozeHoundCloud.Services
 {
-  internal class AccountService
+  internal class AccountService : IAccountService
   {
     //-------------------------------------------------------------------------
 
@@ -33,7 +34,14 @@ namespace BoozeHoundCloud.Services
 
     //-------------------------------------------------------------------------
 
-    public void AddAccount(AccountDto newAccount)
+    public Account GetAccount(int id)
+    {
+      return _accounts.Get(id);
+    }
+
+    //-------------------------------------------------------------------------
+
+    public Account AddAccount(AccountDto newAccount)
     {
       Account existingAccount = GetAccount(newAccount.Name);
 
@@ -52,6 +60,13 @@ namespace BoozeHoundCloud.Services
           $"AccountType not found for id {newAccount.AccountTypeId}.",
           nameof(newAccount.AccountTypeId));
       }
+
+      var createdAccount = Mapper.Map<AccountDto, Account>(newAccount);
+
+      _accounts.Add(createdAccount);
+      _accounts.Save();
+
+      return createdAccount;
     }
 
     //-------------------------------------------------------------------------
