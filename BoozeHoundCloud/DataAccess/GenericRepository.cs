@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using BoozeHoundCloud.Models;
  
-namespace BoozeHoundCloud.DAL
+namespace BoozeHoundCloud.DataAccess
 {
   public class GenericRepository<T> : IRepository<T> where T : class
   {

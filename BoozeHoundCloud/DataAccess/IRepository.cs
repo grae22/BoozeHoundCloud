@@ -1,8 +1,8 @@
-﻿using System; 
-using System.Collections.Generic; 
-using System.Linq.Expressions; 
- 
-namespace BoozeHoundCloud.DAL 
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+
+namespace BoozeHoundCloud.DataAccess 
 { 
   public interface IRepository<T> : IDisposable 
   { 

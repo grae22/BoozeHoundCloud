@@ -8,7 +8,7 @@ using NUnit.Framework;
 using Moq;
 using BoozeHoundCloud;
 using BoozeHoundCloud.Controllers.Api;
-using BoozeHoundCloud.DAL;
+using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.Dtos;
 using BoozeHoundCloud.Models.Core;
 
