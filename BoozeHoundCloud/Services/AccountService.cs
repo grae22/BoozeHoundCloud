@@ -3,6 +3,7 @@ using AutoMapper;
 using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.DataTransferObjects;
 using BoozeHoundCloud.Models.Core;
+using BoozeHoundCloud.Utils;
 
 namespace BoozeHoundCloud.Services
 {
@@ -67,6 +68,24 @@ namespace BoozeHoundCloud.Services
       _accounts.Save();
 
       return createdAccount;
+    }
+
+    //-------------------------------------------------------------------------
+
+    public void ApplyDebit(Account account, decimal value)
+    {
+      Validation.ValueIsNonZeroAndPositive(value);
+
+      account.Balance -= value;
+    }
+
+    //-------------------------------------------------------------------------
+
+    public void ApplyCredit(Account account, decimal value)
+    {
+      Validation.ValueIsNonZeroAndPositive(value);
+
+      account.Balance += value;
     }
 
     //-------------------------------------------------------------------------

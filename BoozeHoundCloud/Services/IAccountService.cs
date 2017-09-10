@@ -9,6 +9,8 @@ namespace BoozeHoundCloud.Services
 
     Account GetAccount(int id);
     Account AddAccount(AccountDto newAccount);
+    void ApplyDebit(Account account, decimal value);
+    void ApplyCredit(Account account, decimal value);
 
     //-------------------------------------------------------------------------
   }

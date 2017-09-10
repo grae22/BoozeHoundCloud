@@ -2,6 +2,7 @@
 using AutoMapper;
 using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.DataTransferObjects;
+using BoozeHoundCloud.Models;
 using BoozeHoundCloud.Models.Core;
 
 namespace BoozeHoundCloud.Services
@@ -10,14 +11,17 @@ namespace BoozeHoundCloud.Services
   {
     //-------------------------------------------------------------------------
 
+    private readonly IApplicationDbContext _context;
     private readonly IRepository<Transaction> _transactions;
     private readonly IAccountService _accounts;
 
     //-------------------------------------------------------------------------
 
-    public TransactionService(IRepository<Transaction> transactions,
+    public TransactionService(IApplicationDbContext context,
+                              IRepository<Transaction> transactions,
                               IAccountService accounts)
     {
+      _context = context;
       _transactions = transactions;
       _accounts = accounts;
     }
@@ -30,8 +34,11 @@ namespace BoozeHoundCloud.Services
 
       ResolveAccounts(newTransaction, transaction);
 
+      _accounts.ApplyDebit(transaction.DebitAccount, transaction.Value);
+      _accounts.ApplyCredit(transaction.CreditAccount, transaction.Value);
+
       _transactions.Add(transaction);
-      _transactions.Save();
+      _context.SaveChanges();
     }
 
     //-------------------------------------------------------------------------

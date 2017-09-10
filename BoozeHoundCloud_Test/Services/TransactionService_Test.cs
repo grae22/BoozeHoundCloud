@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Moq;
 using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.DataTransferObjects;
+using BoozeHoundCloud.Models;
 using BoozeHoundCloud.Models.Core;
 using BoozeHoundCloud.Services;
 
@@ -16,6 +17,7 @@ namespace BoozeHoundCloud_Test.Services
     //-------------------------------------------------------------------------
 
     private TransactionService _testObject;
+    private Mock<IApplicationDbContext> _context;
     private Mock<IRepository<Transaction>> _transactions;
     private Mock<IAccountService> _accounts;
 
@@ -26,15 +28,22 @@ namespace BoozeHoundCloud_Test.Services
     {
       AutoMapperConfig.Initialise();
 
+      _context = new Mock<IApplicationDbContext>();
       _transactions = new Mock<IRepository<Transaction>>();
       _accounts = new Mock<IAccountService>();
-      _testObject = new TransactionService(_transactions.Object, _accounts.Object);
+
+      _testObject =
+        new TransactionService(
+          _context.Object,
+          _transactions.Object,
+          _accounts.Object);
     }
 
     //-------------------------------------------------------------------------
 
     [Test]
-    public void AddTransaction()
+    [Category("AddTransaction")]
+    public void ContextSaveCalledOnSuccess()
     {
       // Valid accounts will always be returned so we don't exceptions for unknown
       // debit & credit accounts.
@@ -43,13 +52,14 @@ namespace BoozeHoundCloud_Test.Services
       _testObject.AddTransaction(new TransactionDto());
 
       _transactions.Verify(x => x.Add(It.IsAny<Transaction>()), Times.Once);
-      _transactions.Verify(x => x.Save(), Times.Once);
+      _context.Verify(x => x.SaveChanges(), Times.Once);
     }
 
     //-------------------------------------------------------------------------
 
     [Test]
-    public void ExceptionOnAddTransactionIfDebitAccountNotFound()
+    [Category("AddTransaction")]
+    public void ExceptionIfDebitAccountNotFound()
     {
       var transaction = new TransactionDto
       {
@@ -82,7 +92,8 @@ namespace BoozeHoundCloud_Test.Services
     //-------------------------------------------------------------------------
 
     [Test]
-    public void ExceptionOnAddTransactionIfCreditAccountNotFound()
+    [Category("AddTransaction")]
+    public void ExceptionIfCreditAccountNotFound()
     {
       var transaction = new TransactionDto
       {
@@ -113,5 +124,51 @@ namespace BoozeHoundCloud_Test.Services
     }
 
     //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("AddTransaction")]
+    public void DebitAccountDebited()
+    {
+      var transaction = new TransactionDto
+      {
+        DebitAccountId = 1,
+        CreditAccountId = 2,
+        Value = 1.23m
+      };
+
+      var debitAccount = new Mock<Account>();
+
+      _accounts.Setup(x => x.GetAccount(transaction.DebitAccountId)).Returns(debitAccount.Object);
+      _accounts.Setup(x => x.GetAccount(transaction.CreditAccountId)).Returns(new Account());
+
+      _testObject.AddTransaction(transaction);
+
+      _accounts.Verify(x => x.ApplyDebit(debitAccount.Object, transaction.Value), Times.Once);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("AddTransaction")]
+    public void CreditAccountCredited()
+    {
+      var transaction = new TransactionDto
+      {
+        DebitAccountId = 1,
+        CreditAccountId = 2,
+        Value = 1.23m
+      };
+
+      var creditAccount = new Mock<Account>();
+
+      _accounts.Setup(x => x.GetAccount(transaction.DebitAccountId)).Returns(new Account());
+      _accounts.Setup(x => x.GetAccount(transaction.CreditAccountId)).Returns(creditAccount.Object);
+
+      _testObject.AddTransaction(transaction);
+
+      _accounts.Verify(x => x.ApplyCredit(creditAccount.Object, transaction.Value), Times.Once);
+    }
+
+    //-------------------------------------------------------------------------
   }
-  }
+}

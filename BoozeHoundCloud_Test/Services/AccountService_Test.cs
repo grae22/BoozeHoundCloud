@@ -71,7 +71,8 @@ namespace BoozeHoundCloud_Test.Services
     //-------------------------------------------------------------------------
     
     [Test]
-    public void GetAccountReturnsNullOnNotFound()
+    [Category("GetAccount")]
+    public void ReturnsNullOnNotFound()
     {
       Account account = _testObject.GetAccount(123);
 
@@ -81,6 +82,7 @@ namespace BoozeHoundCloud_Test.Services
     //-------------------------------------------------------------------------
     
     [Test]
+    [Category("GetAccount")]
     public void GetAccount()
     {
       _accounts.Setup(x => x.Get(123)).Returns(new Account());
@@ -93,7 +95,8 @@ namespace BoozeHoundCloud_Test.Services
     //-------------------------------------------------------------------------
 
     [Test]
-    public void AddAccountExceptionIfNameAlreadyExists()
+    [Category("AddAccount")]
+    public void ExceptionIfNameAlreadyExists()
     {
       // An account object will be returned for any search.
       _accounts.Setup(x => x.Get(It.IsAny<Expression<Func<Account, bool>>>()))
@@ -122,7 +125,8 @@ namespace BoozeHoundCloud_Test.Services
     //-------------------------------------------------------------------------
 
     [Test]
-    public void AddAccountExceptionIfTypeNotFound()
+    [Category("AddAccount")]
+    public void ExceptionIfTypeNotFound()
     {
       var newAccount = new AccountDto
       {
@@ -153,7 +157,8 @@ namespace BoozeHoundCloud_Test.Services
     //-------------------------------------------------------------------------
 
     [Test]
-    public void AddAccount()
+    [Category("AddAccount")]
+    public void AccountRepositoryAddAndSaveCalled()
     {
       var newAccount = new AccountDto
       {
@@ -174,6 +179,110 @@ namespace BoozeHoundCloud_Test.Services
 
       _accounts.Verify(x => x.Add(It.IsAny<Account>()), Times.Once);
       _accounts.Verify(x => x.Save(), Times.Once);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("ApplyDebit")]
+    public void BalanceCorrectAfterApplyDebit()
+    {
+      var account = new Account
+      {
+        Balance = 0m
+      };
+
+      _testObject.ApplyDebit(account, 1.23m);
+
+      Assert.AreEqual(-1.23m, account.Balance);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("ApplyDebit")]
+    public void ExceptionOnZeroDebitValue()
+    {
+      try
+      {
+        _testObject.ApplyDebit(new Account(), 0m);
+      }
+      catch (ArgumentException)
+      {
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("ApplyDebit")]
+    public void ExceptionOnNegativeDebitValue()
+    {
+      try
+      {
+        _testObject.ApplyDebit(new Account(), -1m);
+      }
+      catch (ArgumentException)
+      {
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("ApplyCredit")]
+    public void BalanceCorrectAfterApplyCredit()
+    {
+      var account = new Account
+      {
+        Balance = 0m
+      };
+
+      _testObject.ApplyCredit(account, 1.23m);
+
+      Assert.AreEqual(1.23m, account.Balance);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("ApplyCredit")]
+    public void ExceptionOnZeroCreditValue()
+    {
+      try
+      {
+        _testObject.ApplyCredit(new Account(), 0m);
+      }
+      catch (ArgumentException)
+      {
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("ApplyCredit")]
+    public void ExceptionOnNegativeCreditValue()
+    {
+      try
+      {
+        _testObject.ApplyCredit(new Account(), -1m);
+      }
+      catch (ArgumentException)
+      {
+        Assert.Pass();
+      }
+
+      Assert.Fail();
     }
 
     //-------------------------------------------------------------------------
