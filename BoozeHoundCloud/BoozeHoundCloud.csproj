@@ -200,7 +200,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="DataAccess\GenericRepository.cs" />
     <Compile Include="DataAccess\IRepository.cs" />
-    <Compile Include="Dtos\AccountDto.cs" />
+    <Compile Include="DataTransferObjects\AccountDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

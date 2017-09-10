@@ -2,7 +2,7 @@
 using System.Web.Http;
 using AutoMapper;
 using BoozeHoundCloud.DataAccess;
-using BoozeHoundCloud.Dtos;
+using BoozeHoundCloud.DataTransferObjects;
 using BoozeHoundCloud.Models;
 using BoozeHoundCloud.Models.Core;
 

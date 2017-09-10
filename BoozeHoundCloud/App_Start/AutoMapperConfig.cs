@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BoozeHoundCloud.Dtos;
+using BoozeHoundCloud.DataTransferObjects;
 using BoozeHoundCloud.Models.Core;
 
 namespace BoozeHoundCloud

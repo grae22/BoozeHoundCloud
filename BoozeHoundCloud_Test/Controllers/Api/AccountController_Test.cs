@@ -7,7 +7,7 @@ using Moq;
 using BoozeHoundCloud;
 using BoozeHoundCloud.Controllers.Api;
 using BoozeHoundCloud.DataAccess;
-using BoozeHoundCloud.Dtos;
+using BoozeHoundCloud.DataTransferObjects;
 using BoozeHoundCloud.Models.Core;
 
 namespace BoozeHoundCloud_Test.Controllers.Api

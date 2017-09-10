@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BoozeHoundCloud.Models.Core;
 
-namespace BoozeHoundCloud.Dtos
+namespace BoozeHoundCloud.DataTransferObjects
 {
   public class AccountDto
   {
