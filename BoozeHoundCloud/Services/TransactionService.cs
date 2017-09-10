@@ -1,4 +1,5 @@
-﻿using BoozeHoundCloud.DataAccess;
+﻿using AutoMapper;
+using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.DataTransferObjects;
 using BoozeHoundCloud.Models.Core;
 
@@ -24,7 +25,10 @@ namespace BoozeHoundCloud.Services
 
     public void AddTransaction(TransactionDto newTransaction)
     {
-      
+      var transaction = Mapper.Map<TransactionDto, Transaction>(newTransaction);
+
+      _transactions.Add(transaction);
+      _transactions.Save();
     }
 
     //-------------------------------------------------------------------------
