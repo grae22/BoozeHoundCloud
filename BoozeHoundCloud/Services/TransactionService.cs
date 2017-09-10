@@ -33,13 +33,10 @@ namespace BoozeHoundCloud.Services
       var transaction = Mapper.Map<TransactionDto, Transaction>(newTransaction);
 
       ResolveAccounts(newTransaction, transaction);
-
-      _accounts.ApplyDebit(transaction.DebitAccount, transaction.Value);
-      _accounts.ApplyCredit(transaction.CreditAccount, transaction.Value);
-
-      _transactions.Add(transaction);
-      _context.SaveChanges();
+      ApplyDebitAndCreditToAccounts(transaction);
+      AddTransactionAndSave(transaction);
     }
+
 
     //-------------------------------------------------------------------------
 
@@ -63,6 +60,22 @@ namespace BoozeHoundCloud.Services
           $"No account found for credit account id {transactionDto.CreditAccountId}.",
           nameof(transactionDto.CreditAccountId));
       }
+    }
+
+    //-------------------------------------------------------------------------
+
+    private void ApplyDebitAndCreditToAccounts(Transaction transaction)
+    {
+      _accounts.ApplyDebit(transaction.DebitAccount, transaction.Value);
+      _accounts.ApplyCredit(transaction.CreditAccount, transaction.Value);
+    }
+
+    //-------------------------------------------------------------------------
+
+    private void AddTransactionAndSave(Transaction transaction)
+    {
+      _transactions.Add(transaction);
+      _context.SaveChanges();
     }
 
     //-------------------------------------------------------------------------
