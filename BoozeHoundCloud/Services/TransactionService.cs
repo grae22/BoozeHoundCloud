@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.DataTransferObjects;
 using BoozeHoundCloud.Models.Core;
@@ -27,8 +28,34 @@ namespace BoozeHoundCloud.Services
     {
       var transaction = Mapper.Map<TransactionDto, Transaction>(newTransaction);
 
+      ResolveAccounts(newTransaction, transaction);
+
       _transactions.Add(transaction);
       _transactions.Save();
+    }
+
+    //-------------------------------------------------------------------------
+
+    private void ResolveAccounts(TransactionDto transactionDto,
+                                 Transaction transaction)
+    {
+      transaction.DebitAccount = _accounts.GetAccount(transactionDto.DebitAccountId);
+
+      if (transaction.DebitAccount == null)
+      {
+        throw new ArgumentException(
+          $"No account found for debit account id {transactionDto.DebitAccountId}.",
+          nameof(transactionDto.DebitAccountId));
+      }
+
+      transaction.CreditAccount = _accounts.GetAccount(transactionDto.CreditAccountId);
+
+      if (transaction.CreditAccount == null)
+      {
+        throw new ArgumentException(
+          $"No account found for credit account id {transactionDto.CreditAccountId}.",
+          nameof(transactionDto.CreditAccountId));
+      }
     }
 
     //-------------------------------------------------------------------------
