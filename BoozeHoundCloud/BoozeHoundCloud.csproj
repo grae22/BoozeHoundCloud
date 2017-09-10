@@ -212,6 +212,10 @@
     <Compile Include="Migrations\201709021646276_SeedingAccountTypes.Designer.cs">
       <DependentUpon>201709021646276_SeedingAccountTypes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709101058196_TransactionDescriptionLengthReduced.cs" />
+    <Compile Include="Migrations\201709101058196_TransactionDescriptionLengthReduced.Designer.cs">
+      <DependentUpon>201709101058196_TransactionDescriptionLengthReduced.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\IApplicationDbContext.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -308,6 +312,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709021646276_SeedingAccountTypes.resx">
       <DependentUpon>201709021646276_SeedingAccountTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709101058196_TransactionDescriptionLengthReduced.resx">
+      <DependentUpon>201709101058196_TransactionDescriptionLengthReduced.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
