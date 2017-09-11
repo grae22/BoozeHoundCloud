@@ -6,7 +6,7 @@ namespace BoozeHoundCloud.Services
   {
     //-------------------------------------------------------------------------
 
-    void AddTransaction(TransactionDto newTransaction);
+    int AddTransaction(TransactionDto newTransaction);
 
     //-------------------------------------------------------------------------
   }

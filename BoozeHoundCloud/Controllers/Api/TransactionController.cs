@@ -1,5 +1,7 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Web.Http;
 using BoozeHoundCloud.DataAccess;
+using BoozeHoundCloud.DataTransferObjects;
 using BoozeHoundCloud.Models;
 using BoozeHoundCloud.Models.Core;
 using BoozeHoundCloud.Services;
@@ -10,7 +12,7 @@ namespace BoozeHoundCloud.Controllers.Api
   {
     //-------------------------------------------------------------------------
 
-    private ITransactionService _transactions;
+    private readonly ITransactionService _transactionService;
 
     //-------------------------------------------------------------------------
 
@@ -22,7 +24,7 @@ namespace BoozeHoundCloud.Controllers.Api
       var accountTypeRepository = new GenericRepository<AccountType>(context);
       var accountService = new AccountService(accountRepository, accountTypeRepository);
 
-      _transactions =
+      _transactionService =
         new TransactionService(
           context,
           transactionRepository,
@@ -31,9 +33,20 @@ namespace BoozeHoundCloud.Controllers.Api
 
     //-------------------------------------------------------------------------
 
-    public TransactionController(ITransactionService transactions)
+    public TransactionController(ITransactionService transactionService)
     {
-      _transactions = transactions;
+      _transactionService = transactionService;
+    }
+
+    //-------------------------------------------------------------------------
+
+    public IHttpActionResult AddTransaction(TransactionDto transactionDto)
+    {
+      int id = _transactionService.AddTransaction(transactionDto);
+
+      return Created(
+        new Uri($"{Request.RequestUri}/{id}"),
+        id);
     }
 
     //-------------------------------------------------------------------------

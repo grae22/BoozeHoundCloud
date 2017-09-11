@@ -28,15 +28,16 @@ namespace BoozeHoundCloud.Services
 
     //-------------------------------------------------------------------------
 
-    public void AddTransaction(TransactionDto newTransaction)
+    public int AddTransaction(TransactionDto newTransaction)
     {
       var transaction = Mapper.Map<TransactionDto, Transaction>(newTransaction);
 
       ResolveAccounts(newTransaction, transaction);
       ApplyDebitAndCreditToAccounts(transaction);
       AddTransactionAndSave(transaction);
-    }
 
+      return transaction.Id;
+    }
 
     //-------------------------------------------------------------------------
 

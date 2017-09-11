@@ -13,7 +13,7 @@ namespace BoozeHoundCloud.Controllers.Api
   {
     //-------------------------------------------------------------------------
 
-    private readonly IAccountService _accounts;
+    private readonly IAccountService _accountService;
 
     //-------------------------------------------------------------------------
 
@@ -23,14 +23,14 @@ namespace BoozeHoundCloud.Controllers.Api
       var accounts = new GenericRepository<Account>(context);
       var accountTypes = new GenericRepository<AccountType>(context);
 
-      _accounts = new AccountService(accounts, accountTypes);
+      _accountService = new AccountService(accounts, accountTypes);
     }
 
     //-------------------------------------------------------------------------
 
-    public AccountController(IAccountService accounts)
+    public AccountController(IAccountService accountService)
     {
-      _accounts = accounts;
+      _accountService = accountService;
     }
 
     //-------------------------------------------------------------------------
@@ -38,7 +38,7 @@ namespace BoozeHoundCloud.Controllers.Api
     [HttpGet]
     public IHttpActionResult GetAccount(int id)
     {
-      Account account = _accounts.GetAccount(id);
+      Account account = _accountService.GetAccount(id);
 
       if (account == null)
       {
@@ -57,7 +57,7 @@ namespace BoozeHoundCloud.Controllers.Api
     {
       try
       {
-        Account newAccount = _accounts.AddAccount(accountDto);
+        Account newAccount = _accountService.AddAccount(accountDto);
 
         if (newAccount == null)
         {

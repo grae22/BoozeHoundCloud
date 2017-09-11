@@ -18,7 +18,7 @@ namespace BoozeHoundCloud_Test.Controllers.Api
     //-------------------------------------------------------------------------
 
     private AccountController _testObject;
-    private Mock<IAccountService> _accounts;
+    private Mock<IAccountService> _accountService;
 
     //-------------------------------------------------------------------------
 
@@ -27,9 +27,9 @@ namespace BoozeHoundCloud_Test.Controllers.Api
     {
       AutoMapperConfig.Initialise();
 
-      _accounts = new Mock<IAccountService>();
+      _accountService = new Mock<IAccountService>();
 
-      _testObject = new AccountController(_accounts.Object);
+      _testObject = new AccountController(_accountService.Object);
 
       _testObject.Request = new HttpRequestMessage(new HttpMethod("POST"), new Uri("http://localhost"));
     }
@@ -37,14 +37,15 @@ namespace BoozeHoundCloud_Test.Controllers.Api
     //-------------------------------------------------------------------------
 
     [Test]
-    public void GetAccountWithId()
+    [Category("GetAccount")]
+    public void AccountPropertiesCorrect()
     {
       var account = new Mock<Account>();
       account.Object.Name = "AccountName";
       account.Object.AccountTypeId = 456;
       account.Object.Balance = 1.23m;
 
-      _accounts.Setup(x => x.GetAccount(123)).Returns(account.Object);
+      _accountService.Setup(x => x.GetAccount(123)).Returns(account.Object);
 
       var result = _testObject.GetAccount(123);
 
@@ -60,9 +61,10 @@ namespace BoozeHoundCloud_Test.Controllers.Api
     //-------------------------------------------------------------------------
 
     [Test]
-    public void GetAccountWithIdNotFound()
+    [Category("GetAccount")]
+    public void NotFoundResultIfNotFound()
     {
-      _accounts.Setup(x => x.GetAccount(123)).Returns<Account>(null);
+      _accountService.Setup(x => x.GetAccount(123)).Returns<Account>(null);
 
       var result = _testObject.GetAccount(123);
 
@@ -72,22 +74,24 @@ namespace BoozeHoundCloud_Test.Controllers.Api
     //-------------------------------------------------------------------------
 
     [Test]
-    public void CreateAccount()
+    [Category("CreateAccount")]
+    public void ServiceAddAccountCalled()
     {
-      _accounts.Setup(x => x.AddAccount(It.IsAny<AccountDto>()))
+      _accountService.Setup(x => x.AddAccount(It.IsAny<AccountDto>()))
         .Returns(new Account());
 
       var result = _testObject.CreateAccount(new AccountDto());
 
       Assert.IsInstanceOf<CreatedNegotiatedContentResult<Account>>(result);
 
-      _accounts.Verify(x => x.AddAccount(It.IsAny<AccountDto>()), Times.Once);
+      _accountService.Verify(x => x.AddAccount(It.IsAny<AccountDto>()), Times.Once);
     }
 
     //-------------------------------------------------------------------------
 
     [Test]
-    public void CreateAccountBadRequestOnAccountServiceReturnsNullAccount()
+    [Category("CreateAccount")]
+    public void BadRequestOnAccountServiceReturnsNullAccount()
     {
       var result = _testObject.CreateAccount(new AccountDto());
 
@@ -97,9 +101,10 @@ namespace BoozeHoundCloud_Test.Controllers.Api
     //-------------------------------------------------------------------------
 
     [Test]
-    public void CreateAccountBadRequestOnAccountServiceException()
+    [Category("CreateAccount")]
+    public void BadRequestOnAccountServiceException()
     {
-      _accounts.Setup(x => x.AddAccount(It.IsAny<AccountDto>()))
+      _accountService.Setup(x => x.AddAccount(It.IsAny<AccountDto>()))
         .Throws<ArgumentException>();
 
       var result = _testObject.CreateAccount(new AccountDto());
