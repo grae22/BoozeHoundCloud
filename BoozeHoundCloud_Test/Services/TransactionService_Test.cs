@@ -172,6 +172,67 @@ namespace BoozeHoundCloud_Test.Services
     //-------------------------------------------------------------------------
 
     [Test]
+    [Category("AddTransaction")]
+    public void CreatedTimestampSetCorrectly()
+    {
+      // Set up so the transaction object added to the repository is saved for us to inspect.
+      Transaction transaction = null;
+
+      _transactions.Setup(x => x.Add(It.IsAny<Transaction>()))
+        .Callback<Transaction>(t => transaction = t);
+
+      // Set up accounts the transaction will use so we don't get invalid account exceptions.
+      _accounts.Setup(x => x.GetAccount(1)).Returns(new Account());
+      _accounts.Setup(x => x.GetAccount(2)).Returns(new Account());
+
+      // Creat the transaction dto.
+      var transactionDto = new TransactionDto
+      {
+        DebitAccountId = 1,
+        CreditAccountId = 2
+      };
+
+      // Add a transaction and inspect the transaction object that gets created.
+      _testObject.AddTransaction(transactionDto);
+
+      var justNow = new TimeSpan(0, 0, 2);
+      TimeSpan timestampAge = (DateTime.UtcNow - transaction.CreatedTimestamp);
+
+      Assert.True(timestampAge < justNow);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("AddTransaction")]
+    public void ProcessedTimestampIsNull()
+    {
+      // Set up so the transaction object added to the repository is saved for us to inspect.
+      Transaction transaction = null;
+
+      _transactions.Setup(x => x.Add(It.IsAny<Transaction>()))
+        .Callback<Transaction>(t => transaction = t);
+
+      // Set up accounts the transaction will use so we don't get invalid account exceptions.
+      _accounts.Setup(x => x.GetAccount(1)).Returns(new Account());
+      _accounts.Setup(x => x.GetAccount(2)).Returns(new Account());
+
+      // Creat the transaction dto.
+      var transactionDto = new TransactionDto
+      {
+        DebitAccountId = 1,
+        CreditAccountId = 2
+      };
+
+      // Add a transaction and inspect the transaction object that gets created.
+      _testObject.AddTransaction(transactionDto);
+
+      Assert.Null(transaction.ProcessedTimestamp);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
     [Category("GetTransaction")]
     public void ExistingTransactionReturned()
     {

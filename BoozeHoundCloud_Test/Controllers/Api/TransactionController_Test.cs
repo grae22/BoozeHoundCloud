@@ -58,27 +58,7 @@ namespace BoozeHoundCloud_Test.Controllers.Api
     }
 
     //-------------------------------------------------------------------------
-
-    [Test]
-    [Category("AddTransaction")]
-    public void CreatedTimestampSetCorrectly()
-    {
-      // TODO
-      Assert.Fail();
-    }
-
-    //-------------------------------------------------------------------------
-
-    [Test]
-    [Category("AddTransaction")]
-    public void ProcessedTimestampIsNull()
-    {
-      // TODO
-      Assert.Fail();
-    }
-
-    //-------------------------------------------------------------------------
-
+    
     [Test]
     [Category("GetTransaction")]
     public void CorrectTransactionIsReturned()
