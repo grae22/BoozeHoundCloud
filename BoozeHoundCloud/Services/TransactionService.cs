@@ -32,11 +32,27 @@ namespace BoozeHoundCloud.Services
     {
       var transaction = Mapper.Map<TransactionDto, Transaction>(newTransaction);
 
+      SetCreatedTimestamp(transaction);
+      SetProcessedTimestampToNull(transaction);
       ResolveAccounts(newTransaction, transaction);
       ApplyDebitAndCreditToAccounts(transaction);
       AddTransactionAndSave(transaction);
 
       return transaction.Id;
+    }
+
+    //-------------------------------------------------------------------------
+
+    private static void SetCreatedTimestamp(Transaction transaction)
+    {
+      transaction.CreatedTimestamp = DateTime.UtcNow;
+    }
+
+    //-------------------------------------------------------------------------
+
+    private static void SetProcessedTimestampToNull(Transaction transaction)
+    {
+      transaction.ProcessedTimestamp = null;
     }
 
     //-------------------------------------------------------------------------

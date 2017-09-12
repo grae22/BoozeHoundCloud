@@ -58,5 +58,47 @@ namespace BoozeHoundCloud_Test.Controllers.Api
     }
 
     //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("AddTransaction")]
+    public void CreatedTimestampSetCorrectly()
+    {
+      // TODO
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("AddTransaction")]
+    public void ProcessedTimestampIsNull()
+    {
+      // TODO
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("GetTransaction")]
+    public void CorrectTransactionIsReturned()
+    {
+      var transaction1 = new TransactionDto { Reference = "T1" };
+      var transaction2 = new TransactionDto { Reference = "T2" };
+      var transaction3 = new TransactionDto { Reference = "T3" };
+
+      _testObject.AddTransaction(transaction1);
+      var transaction2Response = _testObject.AddTransaction(transaction2);
+      _testObject.AddTransaction(transaction3);
+
+      int transaction2Id = ((CreatedNegotiatedContentResult<int>)transaction2Response).Content;
+
+      // TODO
+      Assert.Fail();
+      //_transactionService.Setup(x => x.)
+    }
+
+    //-------------------------------------------------------------------------
   }
 }
+
