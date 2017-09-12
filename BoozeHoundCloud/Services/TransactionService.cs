@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Web.Http;
+using System.Web.Http.Results;
 using AutoMapper;
 using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.DataTransferObjects;
@@ -39,6 +41,13 @@ namespace BoozeHoundCloud.Services
       AddTransactionAndSave(transaction);
 
       return transaction.Id;
+    }
+
+    //-------------------------------------------------------------------------
+
+    public Transaction GetTransaction(int id)
+    {
+      return _transactions.Get(id);
     }
 
     //-------------------------------------------------------------------------

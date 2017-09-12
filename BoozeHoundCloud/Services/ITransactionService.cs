@@ -1,4 +1,5 @@
 ﻿using BoozeHoundCloud.DataTransferObjects;
+using BoozeHoundCloud.Models.Core;
 
 namespace BoozeHoundCloud.Services
 {
@@ -7,6 +8,7 @@ namespace BoozeHoundCloud.Services
     //-------------------------------------------------------------------------
 
     int AddTransaction(TransactionDto newTransaction);
+    Transaction GetTransaction(int id);
 
     //-------------------------------------------------------------------------
   }

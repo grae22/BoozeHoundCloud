@@ -170,5 +170,31 @@ namespace BoozeHoundCloud_Test.Services
     }
 
     //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("GetTransaction")]
+    public void ExistingTransactionReturned()
+    {
+      _transactions.Setup(x => x.Get(123)).Returns(new Transaction());
+
+      Transaction transaction = _testObject.GetTransaction(123);
+
+      Assert.NotNull(transaction);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("GetTransaction")]
+    public void NullReturnedForTransactionThatDoesntExist()
+    {
+      _transactions.Setup(x => x.Get(123)).Returns<Transaction>(null);
+
+      Transaction transaction = _testObject.GetTransaction(123);
+
+      Assert.Null(transaction);
+    }
+
+    //-------------------------------------------------------------------------
   }
 }
