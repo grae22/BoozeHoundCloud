@@ -19,7 +19,7 @@ namespace BoozeHoundCloud_Test.Services
     private TransactionService _testObject;
     private Mock<IApplicationDbContext> _context;
     private Mock<IRepository<Transaction>> _transactions;
-    private Mock<IAccountService> _accounts;
+    private Mock<IAccountService> _accountService;
 
     //-------------------------------------------------------------------------
     
@@ -30,13 +30,67 @@ namespace BoozeHoundCloud_Test.Services
 
       _context = new Mock<IApplicationDbContext>();
       _transactions = new Mock<IRepository<Transaction>>();
-      _accounts = new Mock<IAccountService>();
+      _accountService = new Mock<IAccountService>();
 
       _testObject =
         new TransactionService(
           _context.Object,
           _transactions.Object,
-          _accounts.Object);
+          _accountService.Object);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void ExceptionWhenInstantiatedWithNullContext()
+    {
+      try
+      {
+        new TransactionService(null, _transactions.Object, _accountService.Object);
+      }
+      catch (ArgumentException ex)
+      {
+        StringAssert.Contains("context", ex.Message.ToLower());
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void ExceptionWhenInstantiatedWithNullTransactionRepository()
+    {
+      try
+      {
+        new TransactionService(_context.Object, null, _accountService.Object);
+      }
+      catch (ArgumentException ex)
+      {
+        StringAssert.Contains("transaction repository", ex.Message.ToLower());
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void ExceptionWhenInstantiatedWithNull()
+    {
+      try
+      {
+        new TransactionService(_context.Object, _transactions.Object, null);
+      }
+      catch (ArgumentException ex)
+      {
+        StringAssert.Contains("account service", ex.Message.ToLower());
+        Assert.Pass();
+      }
+
+      Assert.Fail();
     }
 
     //-------------------------------------------------------------------------
@@ -47,7 +101,7 @@ namespace BoozeHoundCloud_Test.Services
     {
       // Valid accounts will always be returned so we don't exceptions for unknown
       // debit & credit accounts.
-      _accounts.Setup(x => x.GetAccount(It.IsAny<int>())).Returns(new Account());
+      _accountService.Setup(x => x.GetAccount(It.IsAny<int>())).Returns(new Account());
 
       _testObject.AddTransaction(new TransactionDto());
 
@@ -68,10 +122,10 @@ namespace BoozeHoundCloud_Test.Services
       };
 
       // Debit account will not be found.
-      _accounts.Setup(x => x.GetAccount(transaction.DebitAccountId)).Returns<Account>(null);
+      _accountService.Setup(x => x.GetAccount(transaction.DebitAccountId)).Returns<Account>(null);
 
       // Credit account will be found.
-      _accounts.Setup(x => x.GetAccount(transaction.CreditAccountId)).Returns(new Account());
+      _accountService.Setup(x => x.GetAccount(transaction.CreditAccountId)).Returns(new Account());
 
       try
       {
@@ -102,10 +156,10 @@ namespace BoozeHoundCloud_Test.Services
       };
 
       // Debit account will be found.
-      _accounts.Setup(x => x.GetAccount(transaction.DebitAccountId)).Returns(new Account());
+      _accountService.Setup(x => x.GetAccount(transaction.DebitAccountId)).Returns(new Account());
 
       // Credit account will not be found.
-      _accounts.Setup(x => x.GetAccount(transaction.CreditAccountId)).Returns<Account>(null);
+      _accountService.Setup(x => x.GetAccount(transaction.CreditAccountId)).Returns<Account>(null);
 
       try
       {
@@ -138,12 +192,12 @@ namespace BoozeHoundCloud_Test.Services
 
       var debitAccount = new Mock<Account>();
 
-      _accounts.Setup(x => x.GetAccount(transaction.DebitAccountId)).Returns(debitAccount.Object);
-      _accounts.Setup(x => x.GetAccount(transaction.CreditAccountId)).Returns(new Account());
+      _accountService.Setup(x => x.GetAccount(transaction.DebitAccountId)).Returns(debitAccount.Object);
+      _accountService.Setup(x => x.GetAccount(transaction.CreditAccountId)).Returns(new Account());
 
       _testObject.AddTransaction(transaction);
 
-      _accounts.Verify(x => x.ApplyDebit(debitAccount.Object, transaction.Value), Times.Once);
+      _accountService.Verify(x => x.ApplyDebit(debitAccount.Object, transaction.Value), Times.Once);
     }
 
     //-------------------------------------------------------------------------
@@ -161,12 +215,12 @@ namespace BoozeHoundCloud_Test.Services
 
       var creditAccount = new Mock<Account>();
 
-      _accounts.Setup(x => x.GetAccount(transaction.DebitAccountId)).Returns(new Account());
-      _accounts.Setup(x => x.GetAccount(transaction.CreditAccountId)).Returns(creditAccount.Object);
+      _accountService.Setup(x => x.GetAccount(transaction.DebitAccountId)).Returns(new Account());
+      _accountService.Setup(x => x.GetAccount(transaction.CreditAccountId)).Returns(creditAccount.Object);
 
       _testObject.AddTransaction(transaction);
 
-      _accounts.Verify(x => x.ApplyCredit(creditAccount.Object, transaction.Value), Times.Once);
+      _accountService.Verify(x => x.ApplyCredit(creditAccount.Object, transaction.Value), Times.Once);
     }
 
     //-------------------------------------------------------------------------
@@ -182,8 +236,8 @@ namespace BoozeHoundCloud_Test.Services
         .Callback<Transaction>(t => transaction = t);
 
       // Set up accounts the transaction will use so we don't get invalid account exceptions.
-      _accounts.Setup(x => x.GetAccount(1)).Returns(new Account());
-      _accounts.Setup(x => x.GetAccount(2)).Returns(new Account());
+      _accountService.Setup(x => x.GetAccount(1)).Returns(new Account());
+      _accountService.Setup(x => x.GetAccount(2)).Returns(new Account());
 
       // Creat the transaction dto.
       var transactionDto = new TransactionDto
@@ -214,8 +268,8 @@ namespace BoozeHoundCloud_Test.Services
         .Callback<Transaction>(t => transaction = t);
 
       // Set up accounts the transaction will use so we don't get invalid account exceptions.
-      _accounts.Setup(x => x.GetAccount(1)).Returns(new Account());
-      _accounts.Setup(x => x.GetAccount(2)).Returns(new Account());
+      _accountService.Setup(x => x.GetAccount(1)).Returns(new Account());
+      _accountService.Setup(x => x.GetAccount(2)).Returns(new Account());
 
       // Creat the transaction dto.
       var transactionDto = new TransactionDto

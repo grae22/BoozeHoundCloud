@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Web.Http;
-using System.Web.Http.Results;
 using AutoMapper;
 using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.DataTransferObjects;
@@ -23,6 +21,21 @@ namespace BoozeHoundCloud.Services
                               IRepository<Transaction> transactions,
                               IAccountService accounts)
     {
+      if (context == null)
+      {
+        throw new ArgumentException("Context cannot be null.", nameof(context));
+      }
+
+      if (transactions == null)
+      {
+        throw new ArgumentException("Transaction repository cannot be null.", nameof(transactions));
+      }
+
+      if (accounts == null)
+      {
+        throw new ArgumentException("Account service cannot be null", nameof(accounts));
+      }
+
       _context = context;
       _transactions = transactions;
       _accounts = accounts;
