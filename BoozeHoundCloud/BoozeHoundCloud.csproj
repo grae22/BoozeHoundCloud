@@ -218,7 +218,12 @@
     <Compile Include="Migrations\201709101058196_TransactionDescriptionLengthReduced.Designer.cs">
       <DependentUpon>201709101058196_TransactionDescriptionLengthReduced.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709131935272_AddingInterAccountTypeTransactionMappings.cs" />
+    <Compile Include="Migrations\201709131935272_AddingInterAccountTypeTransactionMappings.Designer.cs">
+      <DependentUpon>201709131935272_AddingInterAccountTypeTransactionMappings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Core\InterAccountTypeTransactionMapping.cs" />
     <Compile Include="Models\IApplicationDbContext.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Core\Account.cs" />
@@ -320,6 +325,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709101058196_TransactionDescriptionLengthReduced.resx">
       <DependentUpon>201709101058196_TransactionDescriptionLengthReduced.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709131935272_AddingInterAccountTypeTransactionMappings.resx">
+      <DependentUpon>201709131935272_AddingInterAccountTypeTransactionMappings.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

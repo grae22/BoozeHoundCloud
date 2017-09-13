@@ -10,6 +10,7 @@ namespace BoozeHoundCloud.Models
     //-------------------------------------------------------------------------
 
     public IDbSet<AccountType> AccountTypes { get; set; }
+    public IDbSet<InterAccountTypeTransactionMapping> InterAccountTypeTransactionMappings { get; set; }
     public IDbSet<Account> Accounts { get; set; }
     public IDbSet<Transaction> Transactions { get; set; }
 
