@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Http;
+using AutoMapper;
 using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.DataTransferObjects;
 using BoozeHoundCloud.Models;
@@ -49,6 +50,22 @@ namespace BoozeHoundCloud.Controllers.Api
       return Created(
         new Uri($"{Request.RequestUri}/{id}"),
         id);
+    }
+
+    //-------------------------------------------------------------------------
+
+    public IHttpActionResult GetTransaction(int id)
+    {
+      Transaction transaction = _transactionService.GetTransaction(id);
+
+      if (transaction == null)
+      {
+        return NotFound();
+      }
+
+      var transactionDto = Mapper.Map<Transaction, TransactionDto>(transaction);
+
+      return Ok(transactionDto);
     }
 
     //-------------------------------------------------------------------------

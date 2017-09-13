@@ -6,6 +6,7 @@ using Moq;
 using BoozeHoundCloud;
 using BoozeHoundCloud.Controllers.Api;
 using BoozeHoundCloud.DataTransferObjects;
+using BoozeHoundCloud.Models.Core;
 using BoozeHoundCloud.Services;
 
 namespace BoozeHoundCloud_Test.Controllers.Api
@@ -61,24 +62,49 @@ namespace BoozeHoundCloud_Test.Controllers.Api
     
     [Test]
     [Category("GetTransaction")]
+    public void OkResultReturnedWhenTransactionFound()
+    {
+      var transaction = new Transaction { Reference = "T123" };
+
+      _transactionService.Setup(x => x.GetTransaction(123))
+        .Returns(transaction);
+
+      var response = _testObject.GetTransaction(123);
+      Assert.IsInstanceOf<OkNegotiatedContentResult<TransactionDto>>(response);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("GetTransaction")]
     public void CorrectTransactionIsReturned()
     {
-      var transaction1 = new TransactionDto { Reference = "T1" };
-      var transaction2 = new TransactionDto { Reference = "T2" };
-      var transaction3 = new TransactionDto { Reference = "T3" };
+      var transaction = new Transaction { Reference = "T123" };
 
-      _testObject.AddTransaction(transaction1);
-      var transaction2Response = _testObject.AddTransaction(transaction2);
-      _testObject.AddTransaction(transaction3);
+      _transactionService.Setup(x => x.GetTransaction(123))
+        .Returns(transaction);
 
-      int transaction2Id = ((CreatedNegotiatedContentResult<int>)transaction2Response).Content;
+      var response = _testObject.GetTransaction(123);
 
-      // TODO
-      Assert.Fail();
-      //_transactionService.Setup(x => x.)
+      TransactionDto returnedTransaction = ((OkNegotiatedContentResult<TransactionDto>)response).Content;
+      Assert.AreEqual(transaction.Reference, returnedTransaction.Reference);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("GetTransaction")]
+    public void NotFoundResponseIfTransactionNotFound()
+    {
+      _transactionService.Setup(x => x.GetTransaction(123))
+        .Returns<Transaction>(null);
+
+      var response = _testObject.GetTransaction(123);
+
+      Assert.IsInstanceOf<NotFoundResult>(response);
     }
 
     //-------------------------------------------------------------------------
   }
-}
+  }
 
