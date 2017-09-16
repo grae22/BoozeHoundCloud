@@ -4,7 +4,7 @@ using BoozeHoundCloud.Models.Core;
 
 namespace BoozeHoundCloud.Services
 {
-  internal class AccountTypeService
+  internal class AccountTypeService : IAccountTypeService
   {
     //-------------------------------------------------------------------------
 

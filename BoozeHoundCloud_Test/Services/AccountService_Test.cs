@@ -19,6 +19,7 @@ namespace BoozeHoundCloud_Test.Services
     private AccountService _testObject;
     private Mock<IRepository<Account>> _accounts;
     private Mock<IRepository<AccountType>> _accountTypes;
+    private Mock<IAccountTypeService> _accountTypeService;
 
     //-------------------------------------------------------------------------
 
@@ -29,7 +30,13 @@ namespace BoozeHoundCloud_Test.Services
 
       _accounts = new Mock<IRepository<Account>>();
       _accountTypes = new Mock<IRepository<AccountType>>();
-      _testObject = new AccountService(_accounts.Object, _accountTypes.Object);
+      _accountTypeService = new Mock<IAccountTypeService>();
+
+      _testObject =
+        new AccountService(
+          _accounts.Object,
+          _accountTypes.Object,
+          _accountTypeService.Object);
     }
 
     //-------------------------------------------------------------------------
@@ -39,7 +46,7 @@ namespace BoozeHoundCloud_Test.Services
     {
       try
       {
-        new AccountService(null, _accountTypes.Object);
+        new AccountService(null, _accountTypes.Object, _accountTypeService.Object);
       }
       catch (Exception ex)
       {
@@ -57,7 +64,7 @@ namespace BoozeHoundCloud_Test.Services
     {
       try
       {
-        new AccountService(_accounts.Object, null);
+        new AccountService(_accounts.Object, null, _accountTypeService.Object);
       }
       catch (Exception ex)
       {
@@ -245,6 +252,8 @@ namespace BoozeHoundCloud_Test.Services
     [Category("PerformTransfer")]
     public void DebitAccountBalanceUpdated()
     {
+      AllowTransfersBetweenAnyAccountTypes();
+
       var account = new Account
       {
         Balance = 0m
@@ -261,6 +270,8 @@ namespace BoozeHoundCloud_Test.Services
     [Category("PerformTransfer")]
     public void CreditAccountBalanceUpdated()
     {
+      AllowTransfersBetweenAnyAccountTypes();
+
       var account = new Account
       {
         Balance = 0m
@@ -269,6 +280,44 @@ namespace BoozeHoundCloud_Test.Services
       _testObject.PerformTransfer(new Account(), account, 1.23m);
 
       Assert.AreEqual(1.23m, account.Balance);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("PerformTransfer")]
+    public void ExceptionWhenTransferBetweenAccountTypesNotAllowed()
+    {
+      var fromAccount = new Account
+      {
+        AccountType = new AccountType { Id = 1, Name = "A1" }
+      };
+
+      var toAccount = new Account
+      {
+        AccountType = new AccountType { Id = 2, Name = "A2" }
+      };
+
+      try
+      {
+        _testObject.PerformTransfer(fromAccount, toAccount, 1.23m);
+      }
+      catch (ArgumentException ex)
+      {
+        StringAssert.Contains($"Transfer not allowed from account type '{fromAccount.AccountType.Name}' to type '{toAccount.AccountType.Name}'.", ex.Message);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //=========================================================================
+
+    private void AllowTransfersBetweenAnyAccountTypes()
+    {
+      _accountTypeService.Setup(x =>
+          x.IsTransferAllowed(It.IsAny<AccountType>(), It.IsAny<AccountType>()))
+        .Returns(true);
     }
 
     //-------------------------------------------------------------------------

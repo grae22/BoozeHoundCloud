@@ -13,11 +13,13 @@ namespace BoozeHoundCloud.Services
 
     private readonly IRepository<Account> _accounts;
     private readonly IRepository<AccountType> _accountTypes;
+    private readonly IAccountTypeService _accountTypeService;
 
     //-------------------------------------------------------------------------
 
     public AccountService(IRepository<Account> accounts,
-                          IRepository<AccountType> accountTypes)
+                          IRepository<AccountType> accountTypes,
+                          IAccountTypeService accountTypeService)
     {
       if (accounts == null)
       {
@@ -31,6 +33,7 @@ namespace BoozeHoundCloud.Services
 
       _accounts = accounts;
       _accountTypes = accountTypes;
+      _accountTypeService = accountTypeService;
     }
 
     //-------------------------------------------------------------------------
@@ -88,16 +91,39 @@ namespace BoozeHoundCloud.Services
 
       Validation.ValueIsNonZeroAndPositive(amount);
 
-      debitAccount.Balance -= amount;
-      creditAccount.Balance += amount;
+      ValidateTransferBetweenAccountsIsAllowed(debitAccount, creditAccount);
+      UpdateAccountBalances(debitAccount, creditAccount, amount);
+    }
+    
+    //-------------------------------------------------------------------------
+
+    private Account GetAccount(string name)
+    {
+      return _accounts.Get(a => a.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+    }
+    
+    //-------------------------------------------------------------------------
+
+    private void ValidateTransferBetweenAccountsIsAllowed(Account debitAccount, Account creditAccount)
+    {
+      bool isTransferBetweenAccountTypesAllowed =
+        _accountTypeService.IsTransferAllowed(debitAccount.AccountType, creditAccount.AccountType);
+
+      if (isTransferBetweenAccountTypesAllowed == false)
+      {
+        throw new ArgumentException(
+          $"Transfer not allowed from account type '{debitAccount.AccountType.Name}' to type '{creditAccount.AccountType.Name}'.");
+      }
     }
 
     //-------------------------------------------------------------------------
-    
-    private Account GetAccount(string name)
+
+    private static void UpdateAccountBalances(Account debitAccount,
+                                              Account creditAccount,
+                                              decimal amount)
     {
-      return _accounts.Get(
-        a => a.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+      debitAccount.Balance -= amount;
+      creditAccount.Balance += amount;
     }
 
     //-------------------------------------------------------------------------
