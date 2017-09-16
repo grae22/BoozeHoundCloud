@@ -15,7 +15,8 @@ namespace BoozeHoundCloud.Models.Core
     [MaxLength(NameMaxLength)]
     public string Name { get; set; }
 
-    public AccountType AccountType { get; set; }
+    // Virtual so entity framework can lazy load.
+    public virtual AccountType AccountType { get; set; }
 
     public int AccountTypeId { get; set; }
 
