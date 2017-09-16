@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Moq;
@@ -52,11 +53,24 @@ namespace BoozeHoundCloud_TestServices
     {
       // Set up the mock so that a inter account type transfer mapping will be returned,
       // in other words - any account can transfer to any other account.
-      _interAccountMappings.Setup(x =>
-        x.Get(It.IsAny<Expression<Func<InterAccountTypeTransactionMapping, bool>>>()))
-          .Returns(new InterAccountTypeTransactionMapping());
+      var debitAccountType = new AccountType { Id = 1 };
+      var creditAccountType = new AccountType { Id = 2 };
 
-      Assert.True(_testObject.IsTransferAllowed(new AccountType(), new AccountType()));
+      var debitAccount = new Account { AccountType = debitAccountType };
+      var creditAccount = new Account { AccountType = creditAccountType };
+
+      _interAccountMappings.Setup(x => x.Get())
+        .Returns(
+          new[]
+          {
+            new InterAccountTypeTransactionMapping
+            {
+              DebitAccountType = debitAccountType,
+              CreditAccountType = creditAccountType
+            }
+          });
+
+      Assert.True(_testObject.IsTransferAllowed(debitAccount.AccountType, creditAccount.AccountType));
     }
 
     //-------------------------------------------------------------------------
@@ -65,9 +79,8 @@ namespace BoozeHoundCloud_TestServices
     [Category("IsTransferAllowed")]
     public void TransferNotAllowedForAccountTypesNotMappedInRepo()
     {
-      _interAccountMappings.Setup(x =>
-          x.Get(It.IsAny<Expression<Func<InterAccountTypeTransactionMapping, bool>>>()))
-        .Returns< InterAccountTypeTransactionMapping>(null);
+      _interAccountMappings.Setup(x => x.Get())
+        .Returns(new List<InterAccountTypeTransactionMapping>());
 
       Assert.False(_testObject.IsTransferAllowed(new AccountType(), new AccountType()));
     }
