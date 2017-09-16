@@ -32,7 +32,7 @@ namespace BoozeHoundCloud.Controllers.Api
 
     // Constructor provided for unit-testing, could be removed if dependency injection is used.
 
-    public AccountController(IAccountService accountService)
+    internal AccountController(IAccountService accountService)
     {
       _accountService = accountService;
     }

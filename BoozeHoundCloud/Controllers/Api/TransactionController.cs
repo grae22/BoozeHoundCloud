@@ -38,7 +38,7 @@ namespace BoozeHoundCloud.Controllers.Api
 
     // Constructor provided for unit-testing, could be removed if dependency injection is used.
 
-    public TransactionController(ITransactionService transactionService)
+    internal TransactionController(ITransactionService transactionService)
     {
       _transactionService = transactionService;
     }
