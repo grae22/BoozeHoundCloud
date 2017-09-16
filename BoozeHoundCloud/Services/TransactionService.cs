@@ -50,7 +50,7 @@ namespace BoozeHoundCloud.Services
       SetCreatedTimestamp(transaction);
       SetProcessedTimestampToNull(transaction);
       ResolveAccounts(newTransaction, transaction);
-      ApplyDebitAndCreditToAccounts(transaction);
+      UpdateAccountBalances(transaction);
       AddTransactionAndSave(transaction);
 
       return transaction.Id;
@@ -103,7 +103,7 @@ namespace BoozeHoundCloud.Services
 
     //-------------------------------------------------------------------------
 
-    private void ApplyDebitAndCreditToAccounts(Transaction transaction)
+    private void UpdateAccountBalances(Transaction transaction)
     {
       _accounts.PerformTransfer(
         transaction.DebitAccount,
