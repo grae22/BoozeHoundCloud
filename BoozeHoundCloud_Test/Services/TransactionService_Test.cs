@@ -181,7 +181,7 @@ namespace BoozeHoundCloud_Test.Services
 
     [Test]
     [Category("AddTransaction")]
-    public void DebitAccountDebited()
+    public void AccountServicePerformTransferCalled()
     {
       var transaction = new TransactionDto
       {
@@ -191,40 +191,19 @@ namespace BoozeHoundCloud_Test.Services
       };
 
       var debitAccount = new Mock<Account>();
-
-      _accountService.Setup(x => x.GetAccount(transaction.DebitAccountId)).Returns(debitAccount.Object);
-      _accountService.Setup(x => x.GetAccount(transaction.CreditAccountId)).Returns(new Account());
-
-      _testObject.AddTransaction(transaction);
-
-      _accountService.Verify(x => x.ApplyDebit(debitAccount.Object, transaction.Value), Times.Once);
-    }
-
-    //-------------------------------------------------------------------------
-
-    [Test]
-    [Category("AddTransaction")]
-    public void CreditAccountCredited()
-    {
-      var transaction = new TransactionDto
-      {
-        DebitAccountId = 1,
-        CreditAccountId = 2,
-        Value = 1.23m
-      };
-
       var creditAccount = new Mock<Account>();
 
-      _accountService.Setup(x => x.GetAccount(transaction.DebitAccountId)).Returns(new Account());
+      _accountService.Setup(x => x.GetAccount(transaction.DebitAccountId)).Returns(debitAccount.Object);
       _accountService.Setup(x => x.GetAccount(transaction.CreditAccountId)).Returns(creditAccount.Object);
 
       _testObject.AddTransaction(transaction);
 
-      _accountService.Verify(x => x.ApplyCredit(creditAccount.Object, transaction.Value), Times.Once);
+      _accountService.Verify(x =>
+        x.PerformTransfer(debitAccount.Object, creditAccount.Object, transaction.Value), Times.Once);
     }
 
     //-------------------------------------------------------------------------
-
+    
     [Test]
     [Category("AddTransaction")]
     public void CreatedTimestampSetCorrectly()

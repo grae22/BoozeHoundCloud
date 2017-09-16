@@ -105,8 +105,10 @@ namespace BoozeHoundCloud.Services
 
     private void ApplyDebitAndCreditToAccounts(Transaction transaction)
     {
-      _accounts.ApplyDebit(transaction.DebitAccount, transaction.Value);
-      _accounts.ApplyCredit(transaction.CreditAccount, transaction.Value);
+      _accounts.PerformTransfer(
+        transaction.DebitAccount,
+        transaction.CreditAccount,
+        transaction.Value);
     }
 
     //-------------------------------------------------------------------------

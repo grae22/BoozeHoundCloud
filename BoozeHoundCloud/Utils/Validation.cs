@@ -13,7 +13,7 @@ namespace BoozeHoundCloud.Utils
         return;
       }
 
-      throw new ArgumentException("Value must be non-zero and positive.");
+      throw new ArgumentException($"Value must be non-zero and positive, was {value:N2}.");
     }
 
     //-------------------------------------------------------------------------

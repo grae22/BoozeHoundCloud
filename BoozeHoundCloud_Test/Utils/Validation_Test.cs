@@ -12,15 +12,17 @@ namespace BoozeHoundCloud_Test.Utils
 
     [Test]
     [Category("NonZeroAndPositive")]
-    public void ExceptionWhenZero()
+    [TestCase(0)]
+    [TestCase(-1)]
+    public void ExceptionWhenZero(decimal amount)
     {
       try
       {
-        Validation.ValueIsNonZeroAndPositive(0m);
+        Validation.ValueIsNonZeroAndPositive(amount);
       }
       catch (ArgumentException ex)
       {
-        Assert.AreEqual("Value must be non-zero and positive.", ex.Message);
+        Assert.AreEqual($"Value must be non-zero and positive, was {amount:N2}.", ex.Message);
         Assert.Pass();
       }
 
@@ -28,26 +30,7 @@ namespace BoozeHoundCloud_Test.Utils
     }
 
     //-------------------------------------------------------------------------
-
-    [Test]
-    [Category("NonZeroAndPositive")]
-    public void ExceptionWhenNegative()
-    {
-      try
-      {
-        Validation.ValueIsNonZeroAndPositive(-1m);
-      }
-      catch (ArgumentException ex)
-      {
-        Assert.AreEqual("Value must be non-zero and positive.", ex.Message);
-        Assert.Pass();
-      }
-
-      Assert.Fail();
-    }
-
-    //-------------------------------------------------------------------------
-
+    
     [Test]
     [Category("NonZeroAndPositive")]
     public void NoExceptionWhenNonZeroAndPositive()

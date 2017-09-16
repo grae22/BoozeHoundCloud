@@ -72,24 +72,28 @@ namespace BoozeHoundCloud.Services
 
     //-------------------------------------------------------------------------
 
-    public void ApplyDebit(Account account, decimal value)
+    public void PerformTransfer(Account debitAccount,
+                                Account creditAccount,
+                                decimal amount)
     {
-      Validation.ValueIsNonZeroAndPositive(value);
+      if (debitAccount == null)
+      {
+        throw new ArgumentException("Debit account cannot be null.", nameof(debitAccount));
+      }
 
-      account.Balance -= value;
+      if (creditAccount == null)
+      {
+        throw new ArgumentException("Credit account cannot be null.", nameof(creditAccount));
+      }
+
+      Validation.ValueIsNonZeroAndPositive(amount);
+
+      debitAccount.Balance -= amount;
+      creditAccount.Balance += amount;
     }
 
     //-------------------------------------------------------------------------
-
-    public void ApplyCredit(Account account, decimal value)
-    {
-      Validation.ValueIsNonZeroAndPositive(value);
-
-      account.Balance += value;
-    }
-
-    //-------------------------------------------------------------------------
-
+    
     private Account GetAccount(string name)
     {
       return _accounts.Get(

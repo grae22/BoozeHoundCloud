@@ -184,105 +184,91 @@ namespace BoozeHoundCloud_Test.Services
     //-------------------------------------------------------------------------
 
     [Test]
-    [Category("ApplyDebit")]
-    public void BalanceCorrectAfterApplyDebit()
+    [Category("PerformTransfer")]
+    public void DebitAccountIsNotNull()
+    {
+      try
+      {
+        _testObject.PerformTransfer(null, new Account(), 1.23m);
+      }
+      catch (ArgumentException ex)
+      {
+        StringAssert.Contains("Debit account cannot be null.", ex.Message);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+    
+    [Test]
+    [Category("PerformTransfer")]
+    public void CreditAccountIsNotNull()
+    {
+      try
+      {
+        _testObject.PerformTransfer(new Account(), null, 1.23m);
+      }
+      catch (ArgumentException ex)
+      {
+        StringAssert.Contains("Credit account cannot be null.", ex.Message);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("PerformTransfer")]
+    [TestCase(0)]
+    [TestCase(-1)]
+    public void AmountIsNonZeroAndPositive(decimal amount)
+    {
+      try
+      {
+        _testObject.PerformTransfer(new Account(), new Account(), amount);
+      }
+      catch (ArgumentException)
+      {
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("PerformTransfer")]
+    public void DebitAccountBalanceUpdated()
     {
       var account = new Account
       {
         Balance = 0m
       };
 
-      _testObject.ApplyDebit(account, 1.23m);
+      _testObject.PerformTransfer(account, new Account(), 1.23m);
 
       Assert.AreEqual(-1.23m, account.Balance);
     }
 
     //-------------------------------------------------------------------------
-
+    
     [Test]
-    [Category("ApplyDebit")]
-    public void ExceptionOnZeroDebitValue()
-    {
-      try
-      {
-        _testObject.ApplyDebit(new Account(), 0m);
-      }
-      catch (ArgumentException)
-      {
-        Assert.Pass();
-      }
-
-      Assert.Fail();
-    }
-
-    //-------------------------------------------------------------------------
-
-    [Test]
-    [Category("ApplyDebit")]
-    public void ExceptionOnNegativeDebitValue()
-    {
-      try
-      {
-        _testObject.ApplyDebit(new Account(), -1m);
-      }
-      catch (ArgumentException)
-      {
-        Assert.Pass();
-      }
-
-      Assert.Fail();
-    }
-
-    //-------------------------------------------------------------------------
-
-    [Test]
-    [Category("ApplyCredit")]
-    public void BalanceCorrectAfterApplyCredit()
+    [Category("PerformTransfer")]
+    public void CreditAccountBalanceUpdated()
     {
       var account = new Account
       {
         Balance = 0m
       };
 
-      _testObject.ApplyCredit(account, 1.23m);
+      _testObject.PerformTransfer(new Account(), account, 1.23m);
 
       Assert.AreEqual(1.23m, account.Balance);
-    }
-
-    //-------------------------------------------------------------------------
-
-    [Test]
-    [Category("ApplyCredit")]
-    public void ExceptionOnZeroCreditValue()
-    {
-      try
-      {
-        _testObject.ApplyCredit(new Account(), 0m);
-      }
-      catch (ArgumentException)
-      {
-        Assert.Pass();
-      }
-
-      Assert.Fail();
-    }
-
-    //-------------------------------------------------------------------------
-
-    [Test]
-    [Category("ApplyCredit")]
-    public void ExceptionOnNegativeCreditValue()
-    {
-      try
-      {
-        _testObject.ApplyCredit(new Account(), -1m);
-      }
-      catch (ArgumentException)
-      {
-        Assert.Pass();
-      }
-
-      Assert.Fail();
     }
 
     //-------------------------------------------------------------------------
