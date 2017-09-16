@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.Models.Core;
 
@@ -27,9 +28,12 @@ namespace BoozeHoundCloud.Services
     public bool IsTransferAllowed(AccountType from, AccountType to)
     {
       bool mappingExists =
-        _allowedTransferMappings.Get(mapping =>
-          mapping.DebitAccountType == from &&
-          mapping.CreditAccountType == to) != null;
+        _allowedTransferMappings
+          .Get()
+          .ToList()
+          .Any(mapping =>
+            mapping.DebitAccountType == from &&
+            mapping.CreditAccountType == to);
 
       return mappingExists;
     }
