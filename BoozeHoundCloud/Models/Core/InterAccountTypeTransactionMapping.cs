@@ -9,7 +9,6 @@
     public int DebitAccountTypeId { get; set; }
     public AccountType CreditAccountType { get; set; }
     public int CreditAccountTypeId { get; set; }
-    public bool IsAllowed { get; set; }
 
     //-------------------------------------------------------------------------
   }
