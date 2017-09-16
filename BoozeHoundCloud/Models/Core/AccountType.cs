@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace BoozeHoundCloud.Models.Core
 {
-  public class AccountType
+  public class AccountType : IEquatable<AccountType>
   {
     //-------------------------------------------------------------------------
 
@@ -10,6 +11,13 @@ namespace BoozeHoundCloud.Models.Core
 
     [MaxLength(16)]
     public string Name { get; set; }
+
+    //-------------------------------------------------------------------------
+    
+    public bool Equals(AccountType other)
+    {
+      return Id == other?.Id;
+    }
 
     //-------------------------------------------------------------------------
   }
