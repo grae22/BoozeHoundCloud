@@ -25,6 +25,17 @@ namespace BoozeHoundCloud.DataAccess
 
     //-------------------------------------------------------------------------
 
+    // Constructor for unit tests.
+
+    internal GenericRepository(IApplicationDbContext context,
+                               IDbSet<T> dbSet)
+    {
+      _context = context;
+      _entity = dbSet;
+    }
+
+    //-------------------------------------------------------------------------
+
     public IEnumerable<T> Get()
     {
       return _entity.ToList();
