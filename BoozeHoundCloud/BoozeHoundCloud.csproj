@@ -321,12 +321,6 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BoozeHoundCore\BoozeHoundCore.csproj">
-      <Project>{b6900931-d930-4cf0-a875-e33778111917}</Project>
-      <Name>BoozeHoundCore</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Migrations\201709021626125_Initial migration.resx">
       <DependentUpon>201709021626125_Initial migration.cs</DependentUpon>
     </EmbeddedResource>
