@@ -210,6 +210,7 @@
     <Compile Include="Areas\Core\Services\IAccountTypeService.cs" />
     <Compile Include="Areas\Core\Services\ITransactionService.cs" />
     <Compile Include="Areas\Core\Services\TransactionService.cs" />
+    <Compile Include="Areas\Core\ViewModels\AccountFormViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -501,6 +502,7 @@
     <Content Include="Content\DataTables\extensions\Buttons\css\common.scss" />
     <Content Include="Areas\Core\Views\Account\AccountsOfType.cshtml" />
     <Content Include="Areas\Core\Views\Shared\_AccountTypeLinks.cshtml" />
+    <Content Include="Areas\Core\Views\Account\AccountForm.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-1.12.4-vsdoc.js" />
     <Content Include="Scripts\DataTables\media\js\dataTables.bootstrap.js" />

@@ -1,0 +1,50 @@
+﻿@model BoozeHoundCloud.Areas.Core.ViewModels.AccountFormViewModel
+
+@{
+  bool isNewAccount = (Model.Id == 0);
+  var formTitle = "";
+
+  if (isNewAccount)
+  {
+    formTitle = "Create Account";
+  }
+  else
+  {
+    formTitle = "Edit Account";
+  }
+
+  ViewBag.Title = formTitle;
+}
+
+<h2>@formTitle</h2>
+
+@using (Html.BeginForm("Save", "Account"))
+{
+  <div class="form-group">
+    @Html.LabelFor(m => m.Name)
+    @Html.TextBoxFor(m => m.Name, new { @class="form-control" })
+    @Html.ValidationMessageFor(m => m.Name)
+  </div>
+  <div class="form-group">
+    @Html.LabelFor(m => m.AccountTypeId)
+    @Html.DropDownListFor(
+      m => m.AccountTypeId,
+      new SelectList(
+        Model.AccountTypes,
+        "Id",
+        "Name"),
+      "Select one...",
+      new { @class = "form-control" })
+    @Html.ValidationMessageFor(m => m.AccountTypeId)
+  </div>
+
+  @Html.HiddenFor(m => m.Id);
+  @Html.AntiForgeryToken()
+
+  <button type="submit" class="btn btn-primary">Save</button>
+}
+
+@section scripts
+{
+  @Scripts.Render( "~/bundles/jqueryval" )
+}
