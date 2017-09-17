@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Results;
+using NUnit.Framework;
+using Moq;
 using BoozeHoundCloud;
 using BoozeHoundCloud.Areas.Core.Controllers.Api;
 using BoozeHoundCloud.Areas.Core.DataTransferObjects;
 using BoozeHoundCloud.Areas.Core.Models;
 using BoozeHoundCloud.Areas.Core.Services;
-using Moq;
-using NUnit.Framework;
 
 namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
 {
@@ -32,6 +33,17 @@ namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
       _testObject = new AccountController(_accountService.Object);
 
       _testObject.Request = new HttpRequestMessage(new HttpMethod("POST"), new Uri("http://localhost"));
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("GetAllAccounts")]
+    public void OkResponseReturned()
+    {
+      var response = _testObject.GetAll();
+
+      Assert.IsInstanceOf<OkNegotiatedContentResult<IQueryable<Account>>>(response);
     }
 
     //-------------------------------------------------------------------------

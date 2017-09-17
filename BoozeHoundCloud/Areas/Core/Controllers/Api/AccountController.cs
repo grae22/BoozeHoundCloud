@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using AutoMapper;
 using BoozeHoundCloud.DataAccess;
@@ -38,7 +40,15 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
     }
 
     //-------------------------------------------------------------------------
-    
+
+    [HttpGet]
+    public IHttpActionResult GetAll()
+    {
+      return Ok(_accountService.GetAll());
+    }
+
+    //-------------------------------------------------------------------------
+
     [HttpGet]
     public IHttpActionResult GetAccount(int id)
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using Moq;
 using BoozeHoundCloud.DataAccess;
@@ -67,7 +68,7 @@ namespace BoozeHoundCloud_TestServices
               DebitAccountType = debitAccountType,
               CreditAccountType = creditAccountType
             }
-          });
+          }.AsQueryable());
 
       Assert.True(_testObject.IsTransferAllowed(debitAccount.AccountType, creditAccount.AccountType));
     }
@@ -79,7 +80,7 @@ namespace BoozeHoundCloud_TestServices
     public void TransferNotAllowedForAccountTypesNotMappedInRepo()
     {
       _interAccountMappings.Setup(x => x.Get())
-        .Returns(new List<InterAccountTypeTransactionMapping>());
+        .Returns(new List<InterAccountTypeTransactionMapping>().AsQueryable());
 
       Assert.False(_testObject.IsTransferAllowed(new AccountType(), new AccountType()));
     }

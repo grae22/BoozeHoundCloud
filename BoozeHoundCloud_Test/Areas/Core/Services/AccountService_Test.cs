@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using Moq;
@@ -76,7 +78,26 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
     }
 
     //-------------------------------------------------------------------------
-    
+
+    [Test]
+    [Category("GetAll")]
+    public void AllAccountsReturned()
+    {
+      _accounts.Setup(x => x.Get()).Returns(
+        new List<Account>
+        {
+          new Account(),
+          new Account(),
+          new Account()
+        }.AsQueryable());
+
+      IQueryable<Account> result = _testObject.GetAll();
+
+      Assert.AreEqual(3, result.Count());
+    }
+
+    //-------------------------------------------------------------------------
+
     [Test]
     [Category("GetAccount")]
     public void ReturnsNullOnNotFound()

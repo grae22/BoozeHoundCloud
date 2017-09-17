@@ -1,7 +1,27 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+  ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Accounts</h2>
 
+<table id="bankAccountsTable">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Balance</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+@section scripts
+{
+  <script>
+    $(document).ready(function() {
+      $('#bankAccountsTable').DataTable({
+        ajax: '/api/Core/Account'
+      });
+    });
+  </script>
+}

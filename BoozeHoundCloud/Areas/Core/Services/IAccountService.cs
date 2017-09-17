@@ -1,4 +1,5 @@
-﻿using BoozeHoundCloud.Areas.Core.DataTransferObjects;
+﻿using System.Linq;
+using BoozeHoundCloud.Areas.Core.DataTransferObjects;
 using BoozeHoundCloud.Areas.Core.Models;
 
 namespace BoozeHoundCloud.Areas.Core.Services
@@ -7,6 +8,7 @@ namespace BoozeHoundCloud.Areas.Core.Services
   {
     //-------------------------------------------------------------------------
 
+    IQueryable<Account> GetAll();
     Account GetAccount(int id);
     Account AddAccount(AccountDto newAccount);
     void PerformTransfer(Account debitAccount, Account creditAccount, decimal amount);

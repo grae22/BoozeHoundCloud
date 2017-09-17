@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using BoozeHoundCloud.Areas.Core.DataTransferObjects;
 using BoozeHoundCloud.Areas.Core.Models;
@@ -34,6 +35,13 @@ namespace BoozeHoundCloud.Areas.Core.Services
       _accounts = accounts;
       _accountTypes = accountTypes;
       _accountTypeService = accountTypeService;
+    }
+
+    //-------------------------------------------------------------------------
+
+    public IQueryable<Account> GetAll()
+    {
+      return _accounts.Get();
     }
 
     //-------------------------------------------------------------------------

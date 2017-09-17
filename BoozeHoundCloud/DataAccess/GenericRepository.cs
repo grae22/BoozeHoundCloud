@@ -36,9 +36,9 @@ namespace BoozeHoundCloud.DataAccess
 
     //-------------------------------------------------------------------------
 
-    public IEnumerable<T> Get()
+    public IQueryable<T> Get()
     {
-      return _entity.ToList();
+      return _entity.ToList().AsQueryable();
     }
 
     //-------------------------------------------------------------------------

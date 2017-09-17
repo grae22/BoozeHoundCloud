@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace BoozeHoundCloud.DataAccess 
 { 
   public interface IRepository<T> : IDisposable 
   { 
-    IEnumerable<T> Get(); 
+    IQueryable<T> Get(); 
     T Get(int id); 
     T Get(Expression<Func<T, bool>> where); 
     void Add(T entity); 
