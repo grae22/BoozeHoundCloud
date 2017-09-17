@@ -3,7 +3,7 @@ using NUnit.Framework;
 using Moq;
 using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.Models;
-using BoozeHoundCloud.Models.Core;
+using BoozeHoundCloud.Areas.Core.Models;
 
 namespace BoozeHoundCloud_TestDataAccess
 {

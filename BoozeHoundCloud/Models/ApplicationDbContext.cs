@@ -1,6 +1,6 @@
 ﻿using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using BoozeHoundCloud.Models.Core;
+using BoozeHoundCloud.Areas.Core.Models;
 
 namespace BoozeHoundCloud.Models
 {

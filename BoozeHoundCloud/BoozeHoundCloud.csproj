@@ -194,15 +194,27 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Core\Controllers\AccountController.cs" />
+    <Compile Include="Areas\Core\Controllers\Api\AccountController.cs" />
+    <Compile Include="Areas\Core\Controllers\Api\TransactionController.cs" />
+    <Compile Include="Areas\Core\CoreAreaRegistration.cs" />
+    <Compile Include="Areas\Core\DataTransferObjects\AccountDto.cs" />
+    <Compile Include="Areas\Core\DataTransferObjects\TransactionDto.cs" />
+    <Compile Include="Areas\Core\Models\Account.cs" />
+    <Compile Include="Areas\Core\Models\AccountType.cs" />
+    <Compile Include="Areas\Core\Models\InterAccountTypeTransactionMapping.cs" />
+    <Compile Include="Areas\Core\Models\Transaction.cs" />
+    <Compile Include="Areas\Core\Services\AccountService.cs" />
+    <Compile Include="Areas\Core\Services\AccountTypeService.cs" />
+    <Compile Include="Areas\Core\Services\IAccountService.cs" />
+    <Compile Include="Areas\Core\Services\IAccountTypeService.cs" />
+    <Compile Include="Areas\Core\Services\ITransactionService.cs" />
+    <Compile Include="Areas\Core\Services\TransactionService.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\Api\AccountController.cs" />
-    <Compile Include="Controllers\Api\TransactionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="DataAccess\GenericRepository.cs" />
     <Compile Include="DataAccess\IRepository.cs" />
-    <Compile Include="DataTransferObjects\AccountDto.cs" />
-    <Compile Include="DataTransferObjects\TransactionDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -231,22 +243,12 @@
       <DependentUpon>201709161252477_SeedInterAccountTypeTransactionMappingTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Core\InterAccountTypeTransactionMapping.cs" />
     <Compile Include="Models\IApplicationDbContext.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
-    <Compile Include="Models\Core\Account.cs" />
-    <Compile Include="Models\Core\AccountType.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Core\Transaction.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\AccountService.cs" />
-    <Compile Include="Services\AccountTypeService.cs" />
-    <Compile Include="Services\IAccountService.cs" />
-    <Compile Include="Services\IAccountTypeService.cs" />
-    <Compile Include="Services\ITransactionService.cs" />
-    <Compile Include="Services\TransactionService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\Validation.cs" />
   </ItemGroup>
@@ -262,6 +264,10 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\Core\Views\web.config" />
+    <Content Include="Areas\Core\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Core\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Core\Views\Account\Index.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

@@ -68,14 +68,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\Api\TransactionController_Test.cs" />
-    <Compile Include="Controllers\Api\AccountController_Test.cs" />
+    <Compile Include="Areas\Core\Controllers\Api\TransactionController_Test.cs" />
+    <Compile Include="Areas\Core\Controllers\Api\AccountController_Test.cs" />
     <Compile Include="DataAccess\GenericRepository_Test.cs" />
-    <Compile Include="Models\Core\AccountType_Test.cs" />
+    <Compile Include="Areas\Core\Models\AccountType_Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\AccountService_Test.cs" />
-    <Compile Include="Services\AccountTypeService_Test.cs" />
-    <Compile Include="Services\TransactionService_Test.cs" />
+    <Compile Include="Areas\Core\Services\AccountService_Test.cs" />
+    <Compile Include="Areas\Core\Services\AccountTypeService_Test.cs" />
+    <Compile Include="Areas\Core\Services\TransactionService_Test.cs" />
     <Compile Include="Utils\Validation_Test.cs" />
   </ItemGroup>
   <ItemGroup>

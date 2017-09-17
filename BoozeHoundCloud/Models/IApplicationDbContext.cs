@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using BoozeHoundCloud.Models.Core;
+using BoozeHoundCloud.Areas.Core.Models;
 
 namespace BoozeHoundCloud.Models
 {

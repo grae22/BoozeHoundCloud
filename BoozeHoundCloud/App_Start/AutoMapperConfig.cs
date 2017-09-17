@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using BoozeHoundCloud.DataTransferObjects;
-using BoozeHoundCloud.Models.Core;
+using BoozeHoundCloud.Areas.Core.DataTransferObjects;
+using BoozeHoundCloud.Areas.Core.Models;
 
 namespace BoozeHoundCloud
 {
