@@ -4,6 +4,7 @@ using AutoMapper;
 using BoozeHoundCloud.Areas.Core.DataTransferObjects;
 using BoozeHoundCloud.Areas.Core.Models;
 using BoozeHoundCloud.DataAccess;
+using BoozeHoundCloud.Models;
 using BoozeHoundCloud.Utils;
 
 namespace BoozeHoundCloud.Areas.Core.Services
@@ -15,6 +16,18 @@ namespace BoozeHoundCloud.Areas.Core.Services
     private readonly IRepository<Account> _accounts;
     private readonly IRepository<AccountType> _accountTypes;
     private readonly IAccountTypeService _accountTypeService;
+
+    //-------------------------------------------------------------------------
+
+    public static AccountService Create(IApplicationDbContext context)
+    {
+      var allowedTransferMappings = new GenericRepository<InterAccountTypeTransactionMapping>(context);
+
+      return new AccountService(
+        new GenericRepository<Account>(context),
+        new GenericRepository<AccountType>(context),
+        new AccountTypeService(allowedTransferMappings));
+    }
 
     //-------------------------------------------------------------------------
 
