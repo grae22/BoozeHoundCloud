@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Http;
 using AutoMapper;
 using BoozeHoundCloud.DataAccess;
@@ -40,9 +41,17 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
     //-------------------------------------------------------------------------
 
     [HttpGet]
-    public IHttpActionResult GetAll()
+    public IHttpActionResult GetAll(int? typeId = null)
     {
-      return Json(_accountService.GetAll());
+      if (typeId == null)
+      {
+        return Json(_accountService.GetAll());
+      }
+
+      return Json(
+        _accountService
+          .GetAll()
+          .Where(acc => acc.AccountType.Id == typeId));
     }
 
     //-------------------------------------------------------------------------

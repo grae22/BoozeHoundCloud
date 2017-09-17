@@ -39,11 +39,43 @@ namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
 
     [Test]
     [Category("GetAllAccounts")]
-    public void OkResponseReturned()
+    public void QueryableJsonResultsReturned()
     {
       var response = _testObject.GetAll();
 
       Assert.IsInstanceOf<JsonResult<IQueryable<Account>>>(response);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("GetAllAccounts")]
+    public void AccountsOfTypeQueryableJsonResultsReturned()
+    {
+      var response = _testObject.GetAll(0);
+
+      Assert.IsInstanceOf<JsonResult<IQueryable<Account>>>(response);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("GetAllAccounts")]
+    public void OnlyAccountsOfSpecifiedTypeReturned()
+    {
+      _accountService.Setup(x => x.GetAll())
+        .Returns(
+          new[]
+          {
+            new Account { AccountType = new AccountType { Id = 123 } },
+            new Account { AccountType = new AccountType { Id = 0 } },
+            new Account { AccountType = new AccountType { Id = 123 } }
+          }
+          .AsQueryable());
+
+      var response = (JsonResult<IQueryable<Account>>)_testObject.GetAll(123);
+
+      Assert.AreEqual(2, response.Content.Count());
     }
 
     //-------------------------------------------------------------------------
@@ -84,7 +116,7 @@ namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
     }
 
     //-------------------------------------------------------------------------
-
+    
     [Test]
     [Category("CreateAccount")]
     public void ServiceAddAccountCalled()

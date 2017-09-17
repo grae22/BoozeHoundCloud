@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
+using BoozeHoundCloud.Areas.Core.Models;
 using BoozeHoundCloud.Models;
 
 namespace BoozeHoundCloud.Areas.Core.Controllers
@@ -19,10 +21,25 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
     //-------------------------------------------------------------------------
 
     // GET: Core/Account
-    [HttpGet]
-    public ActionResult Index()
+    [System.Web.Mvc.HttpGet]
+    public ActionResult Index(string typeName)
     {
-      return View();
+      return View("Index");
+    }
+
+    //-------------------------------------------------------------------------
+
+    [System.Web.Mvc.HttpGet]
+    public ActionResult AccountsOfType(string typeName)
+    {
+      AccountType accountType = _context.AccountTypes.FirstOrDefault(x => x.Name.Equals(typeName));
+
+      if (accountType == null)
+      {
+        return HttpNotFound($"AccountType '{typeName}' not found.");
+      }
+
+      return View(accountType);
     }
 
     //-------------------------------------------------------------------------
