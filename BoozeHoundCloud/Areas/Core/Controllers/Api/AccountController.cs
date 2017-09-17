@@ -44,7 +44,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
     [HttpGet]
     public IHttpActionResult GetAll()
     {
-      return Ok(_accountService.GetAll());
+      return Json(_accountService.GetAll());
     }
 
     //-------------------------------------------------------------------------

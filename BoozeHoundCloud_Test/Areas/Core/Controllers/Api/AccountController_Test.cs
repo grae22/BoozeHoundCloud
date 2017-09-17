@@ -43,7 +43,7 @@ namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
     {
       var response = _testObject.GetAll();
 
-      Assert.IsInstanceOf<OkNegotiatedContentResult<IQueryable<Account>>>(response);
+      Assert.IsInstanceOf<JsonResult<IQueryable<Account>>>(response);
     }
 
     //-------------------------------------------------------------------------
