@@ -16,8 +16,10 @@
 @section scripts
 {
   <script>
-    $(document).ready(function() {
-      $('#accountsTable').DataTable({
+    $(document).ready(function()
+    {
+      $('#accountsTable').DataTable(
+      {
         ajax:
         {
           url: '/api/Core/Account?typeId=' + @Model.Id,
@@ -25,7 +27,14 @@
         },
         columns:
         [
-          { data: 'Name' },
+          {
+            data: 'Name',
+            render:
+              function(data, type, account)
+              {
+                return "<a href='/Core/Account/Edit/" + account.Id + "'>" + data + "</a>";
+              }
+          },
           { data: 'Balance' }
         ]
       });

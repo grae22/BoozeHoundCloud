@@ -7,6 +7,7 @@ using Moq;
 using BoozeHoundCloud;
 using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.Areas.Core.DataTransferObjects;
+using BoozeHoundCloud.Areas.Core.Exceptions;
 using BoozeHoundCloud.Areas.Core.Models;
 using BoozeHoundCloud.Areas.Core.Services;
 
@@ -207,6 +208,117 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
 
       _accounts.Verify(x => x.Add(It.IsAny<Account>()), Times.Once);
       _accounts.Verify(x => x.Save(), Times.Once);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("UpdateAccount")]
+    public void UpdateAndSaveCalledOnRepo()
+    {
+      var account = new Account();
+
+      _accounts.Setup(x => x.Get(account.Id)).Returns(account);
+
+      _testObject.UpdateAccount(account);
+
+      _accounts.Verify(x => x.Update(It.IsAny<Account>()), Times.Once);
+      _accounts.Verify(x => x.Save(), Times.Once);
+    }
+
+    //-------------------------------------------------------------------------
+    
+    [Test]
+    [Category("UpdateAccount")]
+    public void NameUpdated()
+    {
+      var originalAccount = new Account
+      {
+        Id = 123,
+        Name = "SomeAccount",
+        AccountTypeId = 1
+      };
+
+      var modifiedAccount = new Account
+      {
+        Id = originalAccount.Id,
+        Name = "NewName",
+        AccountTypeId = originalAccount.AccountTypeId
+      };
+
+      _accounts.Setup(x => x.Get(originalAccount.Id)).Returns(originalAccount);
+
+      _testObject.UpdateAccount(modifiedAccount);
+
+      Assert.AreEqual(originalAccount.Name, modifiedAccount.Name);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("UpdateAccount")]
+    public void ExceptionIfAccountTypeChanges()
+    {
+      var originalAccount = new Account
+      {
+        Id = 123,
+        AccountTypeId = 1
+      };
+
+      var modifiedAccount = new Account
+      {
+        Id = originalAccount.Id,
+        AccountTypeId = 2
+      };
+
+      try
+      {
+        _accounts.Setup(x => x.Get(originalAccount.Id)).Returns(originalAccount);
+
+        _testObject.UpdateAccount(modifiedAccount);
+      }
+      catch (BusinessLogicException ex)
+      {
+        Assert.AreEqual("AccountType cannot change.", ex.Message);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("UpdateAccount")]
+    public void ExceptionIfBalanceChanges()
+    {
+      var originalAccount = new Account
+      {
+        Id = 123,
+        AccountTypeId = 1,
+        Balance = 1.23m
+      };
+
+      var modifiedAccount = new Account
+      {
+        Id = originalAccount.Id,
+        AccountTypeId = originalAccount.AccountTypeId,
+        Balance = 1.24m
+      };
+
+      try
+      {
+        _accounts.Setup(x => x.Get(originalAccount.Id)).Returns(originalAccount);
+
+        _testObject.UpdateAccount(modifiedAccount);
+      }
+      catch (BusinessLogicException ex)
+      {
+        Assert.AreEqual("Balance cannot change.", ex.Message);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
     }
 
     //-------------------------------------------------------------------------

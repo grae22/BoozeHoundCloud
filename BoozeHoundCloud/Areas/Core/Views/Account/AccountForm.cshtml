@@ -34,7 +34,7 @@
         "Id",
         "Name"),
       "Select one...",
-      new { @class = "form-control" })
+      new {@class = "form-control", @readonly = "true" })
     @Html.ValidationMessageFor(m => m.AccountTypeId)
   </div>
 

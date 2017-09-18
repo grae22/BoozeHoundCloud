@@ -200,6 +200,7 @@
     <Compile Include="Areas\Core\CoreAreaRegistration.cs" />
     <Compile Include="Areas\Core\DataTransferObjects\AccountDto.cs" />
     <Compile Include="Areas\Core\DataTransferObjects\TransactionDto.cs" />
+    <Compile Include="Areas\Core\Exceptions\BusinessLogicException.cs" />
     <Compile Include="Areas\Core\Models\Account.cs" />
     <Compile Include="Areas\Core\Models\AccountType.cs" />
     <Compile Include="Areas\Core\Models\InterAccountTypeTransactionMapping.cs" />

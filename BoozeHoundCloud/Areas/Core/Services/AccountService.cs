@@ -2,6 +2,7 @@
 using System.Linq;
 using AutoMapper;
 using BoozeHoundCloud.Areas.Core.DataTransferObjects;
+using BoozeHoundCloud.Areas.Core.Exceptions;
 using BoozeHoundCloud.Areas.Core.Models;
 using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.Models;
@@ -92,6 +93,28 @@ namespace BoozeHoundCloud.Areas.Core.Services
       _accounts.Save();
 
       return createdAccount;
+    }
+
+    //-------------------------------------------------------------------------
+
+    public void UpdateAccount(Account modifiedAccount)
+    {
+      Account originalAccount = _accounts.Get(modifiedAccount.Id);
+
+      if (originalAccount.AccountTypeId != modifiedAccount.AccountTypeId)
+      {
+        throw new BusinessLogicException("AccountType cannot change.");
+      }
+
+      if (originalAccount.Balance != modifiedAccount.Balance)
+      {
+        throw new BusinessLogicException("Balance cannot change.");
+      }
+
+      originalAccount.Name = modifiedAccount.Name;
+
+      _accounts.Update(originalAccount);
+      _accounts.Save();
     }
 
     //-------------------------------------------------------------------------

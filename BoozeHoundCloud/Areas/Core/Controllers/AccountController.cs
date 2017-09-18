@@ -66,6 +66,31 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     //-------------------------------------------------------------------------
 
+    // GET: Core/Account/Edit
+    [HttpGet]
+    public ActionResult Edit(int id)
+    {
+      Account account = _accountService.GetAccount(id);
+
+      if (account == null)
+      {
+        return HttpNotFound($"Account not found with id {id}.");
+      }
+
+      var viewModel = new AccountFormViewModel
+      {
+        Id = account.Id,
+        Name = account.Name,
+        AccountTypeId = account.AccountTypeId,
+        AccountTypes = _context.AccountTypes,
+        Balance = account.Balance
+      };
+
+      return View("AccountForm", viewModel);
+    }
+
+    //-------------------------------------------------------------------------
+
     // GET: Core/Account/Save
     [ValidateAntiForgeryToken]
     public ActionResult Save(Account account)
@@ -91,7 +116,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
       }
       else
       {
-        // TODO: Update existing account.
+        _accountService.UpdateAccount(account);
       }
 
       var args = new RouteValueDictionary();
