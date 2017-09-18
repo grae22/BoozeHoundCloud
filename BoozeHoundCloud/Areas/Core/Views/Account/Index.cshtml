@@ -24,7 +24,13 @@
         },
         columns:
         [
-          { data: 'Name' },
+          {
+            data: 'Name',
+            render:
+            function (data, type, account) {
+              return "<a href='/Core/Account/Edit/" + account.Id + "'>" + data + "</a>";
+            }
+          },
           { data: 'AccountType.Name' },
           { data: 'Balance' }
         ]
