@@ -27,15 +27,25 @@
   </div>
   <div class="form-group">
     @Html.LabelFor(m => m.AccountTypeId)
-    @Html.DropDownListFor(
-      m => m.AccountTypeId,
-      new SelectList(
-        Model.AccountTypes,
-        "Id",
-        "Name"),
-      "Select one...",
-      new {@class = "form-control", @readonly = "true" })
-    @Html.ValidationMessageFor(m => m.AccountTypeId)
+    
+    @if (isNewAccount)
+    {
+      @Html.DropDownListFor(
+        m => m.AccountTypeId,
+        new SelectList(
+          Model.AccountTypes,
+          "Id",
+          "Name"),
+        "Select one...",
+        new { @class = "form-control" })
+      @Html.ValidationMessageFor(m => m.AccountTypeId)
+    }
+    else
+    {
+      @Html.TextBoxFor(
+        m => m.AccountTypes.First(x => x.Id == Model.AccountTypeId).Name,
+        new { @class = "form-control", @readonly = "true" } )
+    }
   </div>
 
   @Html.HiddenFor(m => m.Id);
