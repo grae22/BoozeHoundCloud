@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using Moq;
 using BoozeHoundCloud;
@@ -287,6 +289,25 @@ namespace BoozeHoundCloud_Test.Services
       Transaction transaction = _testObject.GetTransaction(123);
 
       Assert.Null(transaction);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("GetAllTransactions")]
+    public void AllAccountsReturned()
+    {
+      _transactions.Setup(x => x.Get()).Returns(
+        new List<Transaction>
+        {
+          new Transaction(),
+          new Transaction(),
+          new Transaction()
+        }.AsQueryable());
+
+      IQueryable<Transaction> result = _testObject.GetAll();
+
+      Assert.AreEqual(3, result.Count());
     }
 
     //-------------------------------------------------------------------------

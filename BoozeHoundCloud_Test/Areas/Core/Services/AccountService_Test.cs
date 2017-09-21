@@ -81,7 +81,7 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
     //-------------------------------------------------------------------------
 
     [Test]
-    [Category("GetAll")]
+    [Category("GetAllAccounts")]
     public void AllAccountsReturned()
     {
       _accounts.Setup(x => x.Get()).Returns(

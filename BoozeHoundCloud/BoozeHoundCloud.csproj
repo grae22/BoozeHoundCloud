@@ -197,6 +197,7 @@
     <Compile Include="Areas\Core\Controllers\AccountController.cs" />
     <Compile Include="Areas\Core\Controllers\Api\AccountController.cs" />
     <Compile Include="Areas\Core\Controllers\Api\TransactionController.cs" />
+    <Compile Include="Areas\Core\Controllers\TransactionController.cs" />
     <Compile Include="Areas\Core\CoreAreaRegistration.cs" />
     <Compile Include="Areas\Core\DataTransferObjects\AccountDto.cs" />
     <Compile Include="Areas\Core\DataTransferObjects\TransactionDto.cs" />
@@ -212,6 +213,7 @@
     <Compile Include="Areas\Core\Services\ITransactionService.cs" />
     <Compile Include="Areas\Core\Services\TransactionService.cs" />
     <Compile Include="Areas\Core\ViewModels\AccountFormViewModel.cs" />
+    <Compile Include="Areas\Core\ViewModels\TransactionFormViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -504,6 +506,7 @@
     <Content Include="Areas\Core\Views\Account\AccountsOfType.cshtml" />
     <Content Include="Areas\Core\Views\Shared\_AccountTypeLinks.cshtml" />
     <Content Include="Areas\Core\Views\Account\AccountForm.cshtml" />
+    <Content Include="Areas\Core\Views\Transaction\Index.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-1.12.4-vsdoc.js" />
     <Content Include="Scripts\DataTables\media\js\dataTables.bootstrap.js" />

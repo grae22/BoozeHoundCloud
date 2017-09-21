@@ -45,6 +45,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
 
     //-------------------------------------------------------------------------
 
+    [HttpPut]
     public IHttpActionResult AddTransaction(TransactionDto transactionDto)
     {
       int id = _transactionService.AddTransaction(transactionDto);
@@ -56,6 +57,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
 
     //-------------------------------------------------------------------------
 
+    [HttpGet]
     public IHttpActionResult GetTransaction(int id)
     {
       Transaction transaction = _transactionService.GetTransaction(id);
@@ -68,6 +70,14 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
       var transactionDto = Mapper.Map<Transaction, TransactionDto>(transaction);
 
       return Ok(transactionDto);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [HttpGet]
+    public IHttpActionResult GetAll()
+    {
+      return Json(_transactionService.GetAll());
     }
 
     //-------------------------------------------------------------------------

@@ -16,11 +16,13 @@ namespace BoozeHoundCloud.Areas.Core.Models
 
     public decimal Value { get; set; }
 
-    public Account DebitAccount { get; set; }
+    // Virtual so entity framework can lazy load foreign key object.
+    public virtual Account DebitAccount { get; set; }
 
     public int DebitAccountId { get; set; }
 
-    public Account CreditAccount { get; set; }
+    // Virtual so entity framework can lazy load foreign key object.
+    public virtual Account CreditAccount { get; set; }
 
     public int CreditAccountId { get; set; }
 

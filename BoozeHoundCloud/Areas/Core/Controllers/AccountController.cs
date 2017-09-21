@@ -29,7 +29,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     // GET: Core/Account
     [HttpGet]
-    public ActionResult Index(string typeName)
+    public ActionResult Index()
     {
       return View("Index");
     }

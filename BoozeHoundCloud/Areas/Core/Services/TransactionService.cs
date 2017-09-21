@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using BoozeHoundCloud.Areas.Core.DataTransferObjects;
 using BoozeHoundCloud.Areas.Core.Models;
@@ -14,6 +15,16 @@ namespace BoozeHoundCloud.Areas.Core.Services
     private readonly IApplicationDbContext _context;
     private readonly IRepository<Transaction> _transactions;
     private readonly IAccountService _accounts;
+
+    //-------------------------------------------------------------------------
+
+    public static TransactionService Create(IApplicationDbContext context)
+    {
+      return new TransactionService(
+        context,
+        new GenericRepository<Transaction>(context),
+        AccountService.Create(context));
+    }
 
     //-------------------------------------------------------------------------
 
@@ -54,6 +65,13 @@ namespace BoozeHoundCloud.Areas.Core.Services
       AddTransactionAndSave(transaction);
 
       return transaction.Id;
+    }
+
+    //-------------------------------------------------------------------------
+
+    public IQueryable<Transaction> GetAll()
+    {
+      return _transactions.Get();
     }
 
     //-------------------------------------------------------------------------

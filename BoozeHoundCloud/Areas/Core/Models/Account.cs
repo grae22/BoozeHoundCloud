@@ -15,7 +15,7 @@ namespace BoozeHoundCloud.Areas.Core.Models
     [MaxLength(NameMaxLength)]
     public string Name { get; set; }
 
-    // Virtual so entity framework can lazy load.
+    // Virtual so entity framework can lazy load foreign key object.
     public virtual AccountType AccountType { get; set; }
 
     public int AccountTypeId { get; set; }

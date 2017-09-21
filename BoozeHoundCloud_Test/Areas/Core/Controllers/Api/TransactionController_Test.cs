@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Results;
+using NUnit.Framework;
+using Moq;
 using BoozeHoundCloud;
 using BoozeHoundCloud.Areas.Core.Controllers.Api;
 using BoozeHoundCloud.Areas.Core.DataTransferObjects;
 using BoozeHoundCloud.Areas.Core.Models;
 using BoozeHoundCloud.Areas.Core.Services;
-using Moq;
-using NUnit.Framework;
 
 namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
 {
@@ -105,6 +106,16 @@ namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
     }
 
     //-------------------------------------------------------------------------
-  }
-  }
+    
+    [Test]
+    [Category("GetAllTransactions")]
+    public void QueryableJsonResultsReturned()
+    {
+      var response = _testObject.GetAll();
 
+      Assert.IsInstanceOf<JsonResult<IQueryable<Transaction>>>(response);
+    }
+
+    //-------------------------------------------------------------------------
+  }
+}
