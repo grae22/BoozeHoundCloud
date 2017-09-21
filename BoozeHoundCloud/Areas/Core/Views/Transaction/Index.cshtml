@@ -3,6 +3,7 @@
 <table id="transactionTable" class="table table-bordered table-hover">
   <thead>
   <tr>
+    <th>Id</th>
     <th>Date</th>
     <th>Value</th>
     <th>Reference</th>
@@ -24,15 +25,16 @@
         },
         columns:
         [
+          {
+            data: 'Id',
+            render:
+              function(data, type, transaction) {
+                return "<a href='/Core/Transaction/Edit/" + transaction.Id + "'>" + data + "</a>";
+              }
+          },
           { data: 'Date' },
           { data: 'Value' },
-          {
-            data: 'Reference',
-            render:
-            function (data, type, transaction) {
-              return "<a href='/Core/Transaction/Edit/" + transaction.Id + "'>" + data + "</a>";
-            }
-          },
+          { data: 'Reference' },
           { data: 'DebitAccount.Name' },
           { data: 'CreditAccount.Name' }
         ]
