@@ -99,7 +99,7 @@ namespace BoozeHoundCloud.Areas.Core.Services
         throw new BusinessLogicException("Transaction date cannot change.");
       }
 
-      if ((modifiedTransaction.CreatedTimestamp - orignalTransaction.CreatedTimestamp).Ticks == 0)
+      if ((modifiedTransaction.CreatedTimestamp - orignalTransaction.CreatedTimestamp).Ticks != 0)
       {
         throw new BusinessLogicException("Transaction created-timestamp cannot change.");
       }
