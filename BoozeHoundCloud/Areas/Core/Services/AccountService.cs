@@ -111,6 +111,22 @@ namespace BoozeHoundCloud.Areas.Core.Services
         throw new BusinessLogicException("Balance cannot change.");
       }
 
+      bool hasNameChanged = !modifiedAccount.Name.Equals(originalAccount.Name);
+      if (hasNameChanged)
+      {
+        var isNameInUseByAnotherAccount =
+          _accounts
+            .Get()
+            .Any(a => 
+              a.Id != originalAccount.Id &&
+              a.Name.Equals(modifiedAccount.Name, StringComparison.OrdinalIgnoreCase));
+
+        if (isNameInUseByAnotherAccount)
+        {
+          throw new BusinessLogicException($"Account name '{modifiedAccount.Name}' is already in use.");
+        }
+      }
+
       originalAccount.Name = modifiedAccount.Name;
 
       _accounts.Update(originalAccount);

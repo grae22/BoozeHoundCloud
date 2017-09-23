@@ -216,7 +216,7 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
     [Category("UpdateAccount")]
     public void UpdateAndSaveCalledOnRepo()
     {
-      var account = new Account();
+      var account = new Account { Name = "TestAccount" };
 
       _accounts.Setup(x => x.Get(account.Id)).Returns(account);
 
@@ -315,6 +315,46 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
       catch (BusinessLogicException ex)
       {
         Assert.AreEqual("Balance cannot change.", ex.Message);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("UpdateAccount")]
+    public void ExceptionIfNameChangesToNameOfAnotherExistingAccount()
+    {
+      var originalAccount = new Account
+      {
+        Id = 123,
+        Name = "TestName"
+      };
+
+      var modifiedAccount = new Account
+      {
+        Id = originalAccount.Id,
+        Name ="NewName"
+      };
+
+      var anotherExistingAccount = new Account
+      {
+        Id = 321,
+        Name = modifiedAccount.Name
+      };
+
+      try
+      {
+        _accounts.Setup(x => x.Get(originalAccount.Id)).Returns(originalAccount);
+        _accounts.Setup(x => x.Get()).Returns(new List<Account> { anotherExistingAccount }.AsQueryable);
+
+        _testObject.UpdateAccount(modifiedAccount);
+      }
+      catch (BusinessLogicException ex)
+      {
+        Assert.AreEqual($"Account name '{modifiedAccount.Name}' is already in use.", ex.Message);
         Assert.Pass();
       }
 

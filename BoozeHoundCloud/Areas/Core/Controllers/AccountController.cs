@@ -92,6 +92,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
     //-------------------------------------------------------------------------
 
     // GET: Core/Account/Save
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public ActionResult Save(Account account)
     {
@@ -106,7 +107,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
       if (account.AccountType == null)
       {
-        return Create();
+        return HttpNotFound($"AccountType not found for if {account.AccountTypeId}.");
       }
 
       if (isNewAccount)
