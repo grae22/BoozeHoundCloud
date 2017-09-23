@@ -2,6 +2,7 @@
 using System.Linq;
 using AutoMapper;
 using BoozeHoundCloud.Areas.Core.DataTransferObjects;
+using BoozeHoundCloud.Areas.Core.Exceptions;
 using BoozeHoundCloud.Areas.Core.Models;
 using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.Models;
@@ -65,6 +66,55 @@ namespace BoozeHoundCloud.Areas.Core.Services
       AddTransactionAndSave(transaction);
 
       return transaction.Id;
+    }
+
+    //-------------------------------------------------------------------------
+
+    public void UpdateTransaction(Transaction modifiedTransaction)
+    {
+      Transaction orignalTransaction = _transactions.Get(modifiedTransaction.Id);
+
+      if (orignalTransaction == null)
+      {
+        throw new ArgumentException($"Transaction not found with id {modifiedTransaction.Id}.");
+      }
+
+      if (modifiedTransaction.Value != orignalTransaction.Value)
+      {
+        throw new BusinessLogicException("Transaction value cannot change.");
+      }
+
+      if (modifiedTransaction.DebitAccountId != orignalTransaction.DebitAccountId)
+      {
+        throw new BusinessLogicException("Transaction debit-account id cannot change.");
+      }
+
+      if (modifiedTransaction.CreditAccountId != orignalTransaction.CreditAccountId)
+      {
+        throw new BusinessLogicException("Transaction credit-account id cannot change.");
+      }
+
+      if (modifiedTransaction.Date != orignalTransaction.Date)
+      {
+        throw new BusinessLogicException("Transaction date cannot change.");
+      }
+
+      if ((modifiedTransaction.CreatedTimestamp - orignalTransaction.CreatedTimestamp).Ticks == 0)
+      {
+        throw new BusinessLogicException("Transaction created-timestamp cannot change.");
+      }
+
+      if (orignalTransaction.ProcessedTimestamp != null &&
+          modifiedTransaction.ProcessedTimestamp.Equals(orignalTransaction.ProcessedTimestamp) == false)
+      {
+        throw new BusinessLogicException("Transaction processed-timestamp cannot change.");
+      }
+
+      orignalTransaction.Reference = modifiedTransaction.Reference;
+      orignalTransaction.Description = modifiedTransaction.Description;
+
+      _transactions.Update(orignalTransaction);
+      _transactions.Save();
     }
 
     //-------------------------------------------------------------------------

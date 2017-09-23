@@ -9,6 +9,7 @@ namespace BoozeHoundCloud.Areas.Core.Services
     //-------------------------------------------------------------------------
 
     int AddTransaction(TransactionDto newTransaction);
+    void UpdateTransaction(Transaction modifiedTransaction);
     IQueryable<Transaction> GetAll();
     Transaction GetTransaction(int id);
 

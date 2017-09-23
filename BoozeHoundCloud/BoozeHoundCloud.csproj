@@ -507,6 +507,7 @@
     <Content Include="Areas\Core\Views\Shared\_AccountTypeLinks.cshtml" />
     <Content Include="Areas\Core\Views\Account\AccountForm.cshtml" />
     <Content Include="Areas\Core\Views\Transaction\Index.cshtml" />
+    <Content Include="Areas\Core\Views\Transaction\TransactionForm.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-1.12.4-vsdoc.js" />
     <Content Include="Scripts\DataTables\media\js\dataTables.bootstrap.js" />

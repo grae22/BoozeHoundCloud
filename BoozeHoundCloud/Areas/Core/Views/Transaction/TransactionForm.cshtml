@@ -1,0 +1,105 @@
+﻿@model BoozeHoundCloud.Areas.Core.ViewModels.TransactionFormViewModel
+
+@{
+  bool isNewTransaction = (Model.Id == 0);
+  var formTitle = "";
+
+  if (isNewTransaction)
+  {
+    formTitle = "Create Transaction";
+  }
+  else
+  {
+    formTitle = "Edit Transaction";
+  }
+
+  ViewBag.Title = formTitle;
+}
+
+<h2>@formTitle</h2>
+
+@using (Html.BeginForm("Save", "Transaction"))
+{
+  <div class="form-group">
+    @Html.LabelFor(m => m.Date)
+    @Html.TextBoxFor(m => m.Date, new { @class="form-control" })
+    @Html.ValidationMessageFor(m => m.Date)
+  </div>
+  <div class="form-group">
+    @Html.LabelFor(m => m.Reference)
+    @Html.TextBoxFor(m => m.Reference, new { @class = "form-control" })
+  </div>
+  <div class="form-group">
+    @Html.LabelFor(m => m.Description)
+    @Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+  </div>
+  <div class="form-group">
+    @Html.LabelFor(m => m.DebitAccountId)
+    
+    @if (isNewTransaction)
+    {
+      @Html.DropDownListFor(
+        m => m.DebitAccountId,
+        new SelectList(
+          Model.Accounts,
+          "Id",
+          "Name"),
+        "Select one...",
+        new { @class = "form-control" })
+      @Html.ValidationMessageFor(m => m.DebitAccountId)
+    }
+    else
+    {
+      @Html.TextBoxFor(
+        m => m.Accounts.First(x => x.Id == Model.DebitAccountId).Name,
+        new { @class = "form-control", @readonly = "true" } )
+    }
+  </div>
+  <div class="form-group">
+    @Html.LabelFor(m => m.CreditAccountId)
+
+    @if (isNewTransaction)
+    {
+      @Html.DropDownListFor(
+        m => m.CreditAccountId,
+        new SelectList(
+          Model.Accounts,
+          "Id",
+          "Name"),
+        "Select one...",
+        new { @class = "form-control" })
+      @Html.ValidationMessageFor(m => m.CreditAccountId)
+    }
+    else
+    {
+      @Html.TextBoxFor(
+        m => m.Accounts.First(x => x.Id == Model.CreditAccountId).Name,
+        new { @class = "form-control", @readonly = "true" })
+    }
+  </div>
+  <div class="form-group">
+    @Html.LabelFor(m => m.Value)
+    @Html.TextBoxFor(m => m.Value, new { @class = "form-control" })
+  </div>
+  <div class="form-group">
+    @Html.LabelFor(m => m.CreatedTimestamp)
+    @Html.TextBoxFor(m => m.CreatedTimestamp, new { @class = "form-control", @readonly = "true" })
+  </div>
+  <div class="form-group">
+    @Html.LabelFor(m => m.ProcessedTimestamp)
+    @Html.TextBoxFor(m => m.ProcessedTimestamp, new { @class = "form-control", @readonly = "true" })
+  </div>
+
+  @Html.HiddenFor(m => m.Id);
+  @Html.HiddenFor(m => m.DebitAccountId);
+  @Html.HiddenFor(m => m.CreditAccountId);
+  @Html.AntiForgeryToken()
+
+  <button type="submit" class="btn btn-primary">Save</button>
+  <button type="button" class="btn btn-default" onclick="history.go(-1);">Cancel</button>
+}
+
+@section scripts
+{
+  @Scripts.Render( "~/bundles/jqueryval" )
+}

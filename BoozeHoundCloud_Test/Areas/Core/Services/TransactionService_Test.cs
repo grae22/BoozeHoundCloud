@@ -7,6 +7,7 @@ using BoozeHoundCloud;
 using BoozeHoundCloud.Models;
 using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.Areas.Core.DataTransferObjects;
+using BoozeHoundCloud.Areas.Core.Exceptions;
 using BoozeHoundCloud.Areas.Core.Models;
 using BoozeHoundCloud.Areas.Core.Services;
 
@@ -263,6 +264,309 @@ namespace BoozeHoundCloud_Test.Services
       _testObject.AddTransaction(transactionDto);
 
       Assert.Null(transaction.ProcessedTimestamp);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("UpdateTransaction")]
+    public void UpdateAndSaveCalledOnRepo()
+    {
+      var transaction = new Transaction
+      {
+        Id = 123
+      };
+
+      _transactions.Setup(x => x.Get(transaction.Id)).Returns(transaction);
+
+      _testObject.UpdateTransaction(transaction);
+
+      _transactions.Verify(x => x.Update(transaction), Times.Once);
+      _transactions.Verify(x => x.Save(), Times.Once);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("UpdateTransaction")]
+    public void ExceptionIfOriginalTransactionNotFound()
+    {
+      var transaction = new Transaction
+      {
+        Id = 123
+      };
+
+      _transactions.Setup(x => x.Get(transaction.Id)).Returns<Transaction>(null);
+
+      try
+      {
+        _testObject.UpdateTransaction(transaction);
+      }
+      catch (ArgumentException ex)
+      {
+        StringAssert.Contains(transaction.Id.ToString(), ex.Message);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("UpdateTransaction")]
+    public void AllowedUpdateFieldsAreUpdated()
+    {
+      var original = new Transaction
+      {
+        Id = 123,
+        Reference = "TestReference",
+        Description = "TestDescription"
+      };
+
+      var modified = new Transaction
+      {
+        Id = original.Id,
+        Reference = "NewTestReference",
+        Description = "NewTestDescription"
+      };
+
+      _transactions.Setup(x => x.Get(original.Id)).Returns(original);
+
+      _testObject.UpdateTransaction(modified);
+
+      Assert.AreEqual(modified.Reference, original.Reference);
+      Assert.AreEqual(modified.Description, original.Description);
+    }
+
+    //-------------------------------------------------------------------------
+    
+    [Test]
+    [Category("UpdateTransaction")]
+    public void BusinessLogicExceptionOnValueChange()
+    {
+      var original = new Transaction
+      {
+        Id = 123,
+        Value = 1.23m
+      };
+
+      var modified = new Transaction
+      {
+        Id = original.Id,
+        Value = 1.24m
+      };
+
+      _transactions.Setup(x => x.Get(original.Id)).Returns(original);
+
+      try
+      {
+        _testObject.UpdateTransaction(modified);
+      }
+      catch (BusinessLogicException ex)
+      {
+        Assert.AreEqual("Transaction value cannot change.", ex.Message);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("UpdateTransaction")]
+    public void BusinessLogicExceptionOnDebitAccountChange()
+    {
+      var original = new Transaction
+      {
+        Id = 123,
+        DebitAccountId = 1
+      };
+
+      var modified = new Transaction
+      {
+        Id = original.Id,
+        DebitAccountId = 2
+      };
+
+      _transactions.Setup(x => x.Get(original.Id)).Returns(original);
+
+      try
+      {
+        _testObject.UpdateTransaction(modified);
+      }
+      catch (BusinessLogicException ex)
+      {
+        Assert.AreEqual("Transaction debit-account id cannot change.", ex.Message);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("UpdateTransaction")]
+    public void BusinessLogicExceptionOnCreditAccountChange()
+    {
+      var original = new Transaction
+      {
+        Id = 123,
+        CreditAccountId = 1
+      };
+
+      var modified = new Transaction
+      {
+        Id = original.Id,
+        CreditAccountId = 2
+      };
+
+      _transactions.Setup(x => x.Get(original.Id)).Returns(original);
+
+      try
+      {
+        _testObject.UpdateTransaction(modified);
+      }
+      catch (BusinessLogicException ex)
+      {
+        Assert.AreEqual("Transaction credit-account id cannot change.", ex.Message);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("UpdateTransaction")]
+    public void BusinessLogicExceptionOnDateChange()
+    {
+      var original = new Transaction
+      {
+        Id = 123,
+        Date = DateTime.UtcNow
+      };
+
+      var modified = new Transaction
+      {
+        Id = original.Id,
+        Date = DateTime.UtcNow + new TimeSpan(1, 0, 0)
+      };
+
+      _transactions.Setup(x => x.Get(original.Id)).Returns(original);
+
+      try
+      {
+        _testObject.UpdateTransaction(modified);
+      }
+      catch (BusinessLogicException ex)
+      {
+        Assert.AreEqual("Transaction date cannot change.", ex.Message);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("UpdateTransaction")]
+    public void BusinessLogicExceptionOnCreatedTimestampChange()
+    {
+      var original = new Transaction
+      {
+        Id = 123,
+        CreatedTimestamp = DateTime.UtcNow
+      };
+
+      var modified = new Transaction
+      {
+        Id = original.Id,
+        CreatedTimestamp = DateTime.UtcNow + new TimeSpan(1, 0, 0)
+      };
+
+      _transactions.Setup(x => x.Get(original.Id)).Returns(original);
+
+      try
+      {
+        _testObject.UpdateTransaction(modified);
+      }
+      catch (BusinessLogicException ex)
+      {
+        Assert.AreEqual("Transaction created-timestamp cannot change.", ex.Message);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("UpdateTransaction")]
+    public void BusinessLogicExceptionOnProcessedTimestampChange()
+    {
+      var original = new Transaction
+      {
+        Id = 123,
+        ProcessedTimestamp = DateTime.UtcNow
+      };
+
+      var modified = new Transaction
+      {
+        Id = original.Id,
+        ProcessedTimestamp = DateTime.UtcNow + new TimeSpan(1, 0, 0)
+      };
+
+      _transactions.Setup(x => x.Get(original.Id)).Returns(original);
+
+      try
+      {
+        _testObject.UpdateTransaction(modified);
+      }
+      catch (BusinessLogicException ex)
+      {
+        Assert.AreEqual("Transaction processed-timestamp cannot change.", ex.Message);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+    
+    [Test]
+    [Category("UpdateTransaction")]
+    public void NoBusinessLogicExceptionOnTransactionChangeToProcessed()
+    {
+      var original = new Transaction
+      {
+        Id = 123,
+        ProcessedTimestamp = null
+      };
+
+      var modified = new Transaction
+      {
+        Id = original.Id,
+        ProcessedTimestamp = DateTime.UtcNow
+      };
+
+      _transactions.Setup(x => x.Get(original.Id)).Returns(original);
+
+      try
+      {
+        _testObject.UpdateTransaction(modified);
+      }
+      catch (BusinessLogicException)
+      {
+        Assert.Fail();
+      }
+
+      Assert.Pass();
     }
 
     //-------------------------------------------------------------------------

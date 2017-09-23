@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using BoozeHoundCloud.Areas.Core.Models;
@@ -34,6 +35,12 @@ namespace BoozeHoundCloud.Areas.Core.ViewModels
 
     [Required]
     public DateTime Date { get; set; }
+
+    public DateTime CreatedTimestamp { get; set; }
+
+    public DateTime? ProcessedTimestamp { get; set; }
+
+    public IList<Account> Accounts { get; set; }
 
     //-------------------------------------------------------------------------
   }
