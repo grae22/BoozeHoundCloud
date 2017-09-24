@@ -63,11 +63,11 @@
       @Html.DropDownListFor(
         m => m.CreditAccountId,
         new SelectList(
-          Model.Accounts,
+          "",
           "Id",
           "Name"),
         "Select one...",
-        new { @class = "form-control", @onchange = "PopulateDebitAccounts()" })
+        new { @class = "form-control" })
       @Html.ValidationMessageFor(m => m.CreditAccountId)
     }
     else
@@ -124,29 +124,6 @@
                   $('<option></option>').val(account.Id).html(account.Name));
               });
           }
-      });
-    }
-
-    function PopulateDebitAccounts()
-    {
-      var creditAccoundId = $('#CreditAccountId').val();
-
-      $.ajax({
-        url: '/Api/Core/Account/CanDebit/' + creditAccoundId,
-        type: 'GET',
-        dataType: 'JSON',
-        success: function (accounts)
-        {
-          $('#DebitAccountId').html('');
-
-          $('#DebitAccountId').append('<option>Select one...</option>');
-
-          $.each(accounts, function (i, account)
-          {
-            $('#DebitAccountId').append(
-              $('<option></option>').val(account.Id).html(account.Name));
-          });
-        }
       });
     }
   </script>
