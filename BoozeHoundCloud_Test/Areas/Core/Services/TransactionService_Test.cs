@@ -6,7 +6,6 @@ using Moq;
 using BoozeHoundCloud;
 using BoozeHoundCloud.Models;
 using BoozeHoundCloud.DataAccess;
-using BoozeHoundCloud.Areas.Core.DataTransferObjects;
 using BoozeHoundCloud.Areas.Core.Exceptions;
 using BoozeHoundCloud.Areas.Core.Models;
 using BoozeHoundCloud.Areas.Core.Services;
@@ -106,7 +105,7 @@ namespace BoozeHoundCloud_Test.Services
       // debit & credit accounts.
       _accountService.Setup(x => x.GetAccount(It.IsAny<int>())).Returns(new Account());
 
-      _testObject.AddTransaction(new TransactionDto());
+      _testObject.AddTransaction(new Transaction());
 
       _transactions.Verify(x => x.Add(It.IsAny<Transaction>()), Times.Once);
       _context.Verify(x => x.SaveChanges(), Times.Once);
@@ -118,7 +117,7 @@ namespace BoozeHoundCloud_Test.Services
     [Category("AddTransaction")]
     public void ExceptionIfDebitAccountNotFound()
     {
-      var transaction = new TransactionDto
+      var transaction = new Transaction
       {
         DebitAccountId = 1,
         CreditAccountId = 2
@@ -152,7 +151,7 @@ namespace BoozeHoundCloud_Test.Services
     [Category("AddTransaction")]
     public void ExceptionIfCreditAccountNotFound()
     {
-      var transaction = new TransactionDto
+      var transaction = new Transaction
       {
         DebitAccountId = 1,
         CreditAccountId = 2
@@ -186,7 +185,7 @@ namespace BoozeHoundCloud_Test.Services
     [Category("AddTransaction")]
     public void AccountServicePerformTransferCalled()
     {
-      var transaction = new TransactionDto
+      var transaction = new Transaction
       {
         DebitAccountId = 1,
         CreditAccountId = 2,
@@ -211,9 +210,14 @@ namespace BoozeHoundCloud_Test.Services
     [Category("AddTransaction")]
     public void CreatedTimestampSetCorrectly()
     {
-      // Set up so the transaction object added to the repository is saved for us to inspect.
-      Transaction transaction = null;
+      // Creat the transaction.
+      var transaction = new Transaction
+      {
+        DebitAccountId = 1,
+        CreditAccountId = 2
+      };
 
+      // Set up so the transaction object added to the repository is saved for us to inspect.
       _transactions.Setup(x => x.Add(It.IsAny<Transaction>()))
         .Callback<Transaction>(t => transaction = t);
 
@@ -221,15 +225,8 @@ namespace BoozeHoundCloud_Test.Services
       _accountService.Setup(x => x.GetAccount(1)).Returns(new Account());
       _accountService.Setup(x => x.GetAccount(2)).Returns(new Account());
 
-      // Creat the transaction dto.
-      var transactionDto = new TransactionDto
-      {
-        DebitAccountId = 1,
-        CreditAccountId = 2
-      };
-
       // Add a transaction and inspect the transaction object that gets created.
-      _testObject.AddTransaction(transactionDto);
+      _testObject.AddTransaction(transaction);
 
       var justNow = new TimeSpan(0, 0, 2);
       TimeSpan timestampAge = (DateTime.UtcNow - transaction.CreatedTimestamp);
@@ -243,9 +240,14 @@ namespace BoozeHoundCloud_Test.Services
     [Category("AddTransaction")]
     public void ProcessedTimestampIsNull()
     {
-      // Set up so the transaction object added to the repository is saved for us to inspect.
-      Transaction transaction = null;
+      // Creat the transaction.
+      var transaction = new Transaction
+      {
+        DebitAccountId = 1,
+        CreditAccountId = 2
+      };
 
+      // Set up so the transaction object added to the repository is saved for us to inspect.
       _transactions.Setup(x => x.Add(It.IsAny<Transaction>()))
         .Callback<Transaction>(t => transaction = t);
 
@@ -253,15 +255,8 @@ namespace BoozeHoundCloud_Test.Services
       _accountService.Setup(x => x.GetAccount(1)).Returns(new Account());
       _accountService.Setup(x => x.GetAccount(2)).Returns(new Account());
 
-      // Creat the transaction dto.
-      var transactionDto = new TransactionDto
-      {
-        DebitAccountId = 1,
-        CreditAccountId = 2
-      };
-
       // Add a transaction and inspect the transaction object that gets created.
-      _testObject.AddTransaction(transactionDto);
+      _testObject.AddTransaction(transaction);
 
       Assert.Null(transaction.ProcessedTimestamp);
     }

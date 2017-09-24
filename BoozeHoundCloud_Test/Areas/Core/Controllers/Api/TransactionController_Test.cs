@@ -45,7 +45,7 @@ namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
 
       _testObject.AddTransaction(transactionDto);
 
-      _transactionService.Verify(x => x.AddTransaction(transactionDto), Times.Once);
+      _transactionService.Verify(x => x.AddTransaction(It.IsAny<Transaction>()), Times.Once);
     }
 
     //-------------------------------------------------------------------------

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-using AutoMapper;
-using BoozeHoundCloud.Areas.Core.DataTransferObjects;
 using BoozeHoundCloud.Areas.Core.Exceptions;
 using BoozeHoundCloud.Areas.Core.Models;
 using BoozeHoundCloud.DataAccess;
@@ -55,13 +53,11 @@ namespace BoozeHoundCloud.Areas.Core.Services
 
     //-------------------------------------------------------------------------
 
-    public int AddTransaction(TransactionDto newTransaction)
+    public int AddTransaction(Transaction transaction)
     {
-      var transaction = Mapper.Map<TransactionDto, Transaction>(newTransaction);
-
       SetCreatedTimestamp(transaction);
       SetProcessedTimestampToNull(transaction);
-      ResolveAccounts(newTransaction, transaction);
+      ResolveAccounts(transaction);
       UpdateAccountBalances(transaction);
       AddTransactionAndSave(transaction);
 
@@ -147,25 +143,24 @@ namespace BoozeHoundCloud.Areas.Core.Services
 
     //-------------------------------------------------------------------------
 
-    private void ResolveAccounts(TransactionDto transactionDto,
-                                 Transaction transaction)
+    private void ResolveAccounts(Transaction transaction)
     {
-      transaction.DebitAccount = _accounts.GetAccount(transactionDto.DebitAccountId);
+      transaction.DebitAccount = _accounts.GetAccount(transaction.DebitAccountId);
 
       if (transaction.DebitAccount == null)
       {
         throw new ArgumentException(
-          $"No account found for debit account id {transactionDto.DebitAccountId}.",
-          nameof(transactionDto.DebitAccountId));
+          $"No account found for debit account id {transaction.DebitAccountId}.",
+          nameof(transaction.DebitAccountId));
       }
 
-      transaction.CreditAccount = _accounts.GetAccount(transactionDto.CreditAccountId);
+      transaction.CreditAccount = _accounts.GetAccount(transaction.CreditAccountId);
 
       if (transaction.CreditAccount == null)
       {
         throw new ArgumentException(
-          $"No account found for credit account id {transactionDto.CreditAccountId}.",
-          nameof(transactionDto.CreditAccountId));
+          $"No account found for credit account id {transaction.CreditAccountId}.",
+          nameof(transaction.CreditAccountId));
       }
     }
 

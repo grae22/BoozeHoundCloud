@@ -27,7 +27,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     //-------------------------------------------------------------------------
 
-    // GET: Core/Transaction
+    // Core/Transaction
     [HttpGet]
     public ActionResult Index()
     {
@@ -36,7 +36,21 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     //-------------------------------------------------------------------------
 
-    // GET: Core/Transaction/Edit
+    // Core/Transaction/New
+    [HttpGet]
+    public ActionResult New()
+    {
+      var viewModel = new TransactionFormViewModel
+      {
+        Accounts = _accountService.GetAll().ToList()
+      };
+
+      return View("TransactionForm", viewModel);
+    }
+
+    //-------------------------------------------------------------------------
+
+    // Core/Transaction/Edit
     [HttpGet]
     public ActionResult Edit(int id)
     {
@@ -68,7 +82,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     //-------------------------------------------------------------------------
 
-    // PUT: Core/Transaction/Save
+    // Core/Transaction/Save
     [HttpPost]
     [ValidateAntiForgeryToken]
     public ActionResult Save(Transaction transaction)
@@ -78,8 +92,17 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
         return Edit(transaction.Id);
       }
 
-      _transactionService.UpdateTransaction(transaction);
+      bool isNewTransaction = (transaction.Id == 0);
 
+      if (isNewTransaction)
+      {
+        _transactionService.AddTransaction(transaction);
+      }
+      else
+      {
+        _transactionService.UpdateTransaction(transaction);
+      }
+      
       return RedirectToAction("Index");
     }
 

@@ -48,7 +48,9 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
     [HttpPut]
     public IHttpActionResult AddTransaction(TransactionDto transactionDto)
     {
-      int id = _transactionService.AddTransaction(transactionDto);
+      var transaction = Mapper.Map<TransactionDto, Transaction>(transactionDto);
+
+      int id = _transactionService.AddTransaction(transaction);
 
       return Created(
         new Uri($"{Request.RequestUri}/{id}"),

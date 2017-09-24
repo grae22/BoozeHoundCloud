@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using BoozeHoundCloud.Areas.Core.DataTransferObjects;
 using BoozeHoundCloud.Areas.Core.Models;
 
 namespace BoozeHoundCloud.Areas.Core.Services
@@ -8,7 +7,7 @@ namespace BoozeHoundCloud.Areas.Core.Services
   {
     //-------------------------------------------------------------------------
 
-    int AddTransaction(TransactionDto newTransaction);
+    int AddTransaction(Transaction newTransaction);
     void UpdateTransaction(Transaction modifiedTransaction);
     IQueryable<Transaction> GetAll();
     Transaction GetTransaction(int id);
