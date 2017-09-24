@@ -7,6 +7,7 @@ namespace BoozeHoundCloud.Areas.Core.Services
     //-------------------------------------------------------------------------
 
     bool IsTransferAllowed(AccountType from, AccountType to);
+    AccountType Get(int id);
 
     //-------------------------------------------------------------------------
   }

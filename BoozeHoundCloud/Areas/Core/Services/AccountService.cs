@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-using AutoMapper;
-using BoozeHoundCloud.Areas.Core.DataTransferObjects;
 using BoozeHoundCloud.Areas.Core.Exceptions;
 using BoozeHoundCloud.Areas.Core.Models;
 using BoozeHoundCloud.DataAccess;
@@ -23,11 +21,12 @@ namespace BoozeHoundCloud.Areas.Core.Services
     public static AccountService Create(IApplicationDbContext context)
     {
       var allowedTransferMappings = new GenericRepository<InterAccountTypeTransactionMapping>(context);
+      var accountTypes = new GenericRepository<AccountType>(context);
 
       return new AccountService(
         new GenericRepository<Account>(context),
-        new GenericRepository<AccountType>(context),
-        new AccountTypeService(allowedTransferMappings));
+        accountTypes,
+        new AccountTypeService(accountTypes, allowedTransferMappings));
     }
 
     //-------------------------------------------------------------------------

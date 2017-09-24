@@ -16,6 +16,7 @@ namespace BoozeHoundCloud_TestServices
     //-------------------------------------------------------------------------
 
     private AccountTypeService _testObject;
+    private Mock<IRepository<AccountType>> _accountTypes;
     private Mock<IRepository<InterAccountTypeTransactionMapping>> _interAccountMappings;
 
     //-------------------------------------------------------------------------
@@ -23,8 +24,9 @@ namespace BoozeHoundCloud_TestServices
     [SetUp]
     public void SetUp()
     {
+      _accountTypes = new Mock<IRepository<AccountType>>();
       _interAccountMappings = new Mock<IRepository<InterAccountTypeTransactionMapping>>();
-      _testObject = new AccountTypeService(_interAccountMappings.Object);
+      _testObject = new AccountTypeService(_accountTypes.Object, _interAccountMappings.Object);
     }
 
     //-------------------------------------------------------------------------
@@ -34,7 +36,25 @@ namespace BoozeHoundCloud_TestServices
     {
       try
       {
-        new AccountTypeService(null);
+        new AccountTypeService(null, _interAccountMappings.Object);
+      }
+      catch (ArgumentException ex)
+      {
+        StringAssert.Contains("Account types repository cannot be null.", ex.Message);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    public void ExceptionOnNullMappingsRepository()
+    {
+      try
+      {
+        new AccountTypeService(_accountTypes.Object, null);
       }
       catch (ArgumentException ex)
       {
@@ -83,6 +103,17 @@ namespace BoozeHoundCloud_TestServices
         .Returns(new List<InterAccountTypeTransactionMapping>().AsQueryable());
 
       Assert.False(_testObject.IsTransferAllowed(new AccountType(), new AccountType()));
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("GetAccountType")]
+    public void NullReturnedIfNotFound()
+    {
+      AccountType accountType = _testObject.Get(123);
+
+      Assert.Null(accountType);
     }
 
     //-------------------------------------------------------------------------

@@ -24,7 +24,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
       var accountRepository = new GenericRepository<Account>(context);
       var accountTypeRepository = new GenericRepository<AccountType>(context);
       var interAccountMappings = new GenericRepository<InterAccountTypeTransactionMapping>(context);
-      var accountTypeService = new AccountTypeService(interAccountMappings);
+      var accountTypeService = new AccountTypeService(accountTypeRepository, interAccountMappings);
       var accountService = new AccountService(accountRepository, accountTypeRepository, accountTypeService);
 
       _transactionService =

@@ -16,6 +16,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     private readonly IApplicationDbContext _context;
     private readonly IAccountService _accountService;
+    private readonly IAccountTypeService _accountTypeService;
 
     //-------------------------------------------------------------------------
 
@@ -23,6 +24,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
     {
       _context = new ApplicationDbContext();
       _accountService = AccountService.Create(_context);
+      _accountTypeService = AccountTypeService.Create(_context);
     }
 
     //-------------------------------------------------------------------------
@@ -94,14 +96,23 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
     // Core/Account/Save
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Save(Account account)
+    public ActionResult Save(AccountDto accountDto)
     {
       if (ModelState.IsValid == false)
       {
         return New();
       }
 
-      bool isNewAccount = (account.Id == 0);
+      bool isNewAccount = (accountDto.Id == 0);
+
+      var account = Mapper.Map<AccountDto, Account>(accountDto);
+
+      account.AccountType = _accountTypeService.Get(accountDto.AccountTypeId);
+
+      if (account.AccountType == null)
+      {
+        return HttpNotFound($"Account type not found for id {accountDto.AccountTypeId}.");
+      }
 
       if (isNewAccount)
       {
