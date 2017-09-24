@@ -45,7 +45,7 @@
           "Id",
           "Name"),
         "Select one...",
-        new { @class = "form-control" })
+        new { @class = "form-control", @onchange = "PopulateCreditAccounts()" })
       @Html.ValidationMessageFor(m => m.DebitAccountId)
     }
     else
@@ -67,7 +67,7 @@
           "Id",
           "Name"),
         "Select one...",
-        new { @class = "form-control" })
+        new { @class = "form-control", @onchange = "PopulateDebitAccounts()" })
       @Html.ValidationMessageFor(m => m.CreditAccountId)
     }
     else
@@ -102,4 +102,52 @@
 @section scripts
 {
   @Scripts.Render( "~/bundles/jqueryval" )
+
+  <script>
+    function PopulateCreditAccounts()
+    {
+      var debitAccoundId = $('#DebitAccountId').val();
+
+      $.ajax({
+        url: '/Api/Core/Account/CanCredit/' + debitAccoundId,
+        type: 'GET',
+        dataType: 'JSON',
+        success: function (accounts)
+          {
+            $('#CreditAccountId').html('');
+
+            $('#CreditAccountId').append('<option>Select one...</option>');
+
+            $.each(accounts, function (i, account)
+              {
+                $('#CreditAccountId').append(
+                  $('<option></option>').val(account.Id).html(account.Name));
+              });
+          }
+      });
+    }
+
+    function PopulateDebitAccounts()
+    {
+      var creditAccoundId = $('#CreditAccountId').val();
+
+      $.ajax({
+        url: '/Api/Core/Account/CanDebit/' + creditAccoundId,
+        type: 'GET',
+        dataType: 'JSON',
+        success: function (accounts)
+        {
+          $('#DebitAccountId').html('');
+
+          $('#DebitAccountId').append('<option>Select one...</option>');
+
+          $.each(accounts, function (i, account)
+          {
+            $('#DebitAccountId').append(
+              $('<option></option>').val(account.Id).html(account.Name));
+          });
+        }
+      });
+    }
+  </script>
 }

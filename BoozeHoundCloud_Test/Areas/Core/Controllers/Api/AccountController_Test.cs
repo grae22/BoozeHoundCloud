@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Results;
@@ -20,6 +21,7 @@ namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
 
     private AccountController _testObject;
     private Mock<IAccountService> _accountService;
+    private Mock<IAccountTypeService> _accountTypeService;
 
     //-------------------------------------------------------------------------
 
@@ -29,8 +31,9 @@ namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
       AutoMapperConfig.Initialise();
 
       _accountService = new Mock<IAccountService>();
+      _accountTypeService = new Mock<IAccountTypeService>();
 
-      _testObject = new AccountController(_accountService.Object);
+      _testObject = new AccountController(_accountService.Object, _accountTypeService.Object);
 
       _testObject.Request = new HttpRequestMessage(new HttpMethod("POST"), new Uri("http://localhost"));
     }
@@ -154,6 +157,58 @@ namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
       var result = _testObject.CreateAccount(new AccountDto());
 
       Assert.IsInstanceOf<BadRequestErrorMessageResult>(result);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("GetAccountsAccountCanCredit")]
+    public void NotFoundIfFromAccountNotFound()
+    {
+      var response = _testObject.GetAccountsAccountCanCredit(123);
+
+      Assert.IsInstanceOf<NotFoundResult>(response);
+    }
+
+    //-------------------------------------------------------------------------
+    
+    [Test]
+    [Category("GetAccountsAccountCanCredit")]
+    public void AllowedToAccountsReturned()
+    {
+      _accountService.Setup(x => x.GetAccount(123)).Returns(new Account());
+      _accountService.Setup(x => x.GetAll()).Returns(new List<Account> { new Account(), new Account() }.AsQueryable);
+      _accountTypeService.Setup(x => x.IsTransferAllowed(It.IsAny<AccountType>(), It.IsAny<AccountType>())).Returns(true);
+
+      var response = (JsonResult<List<Account>>)_testObject.GetAccountsAccountCanCredit(123);
+
+      Assert.AreEqual(2, response.Content.Count);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("GetAccountsAccountCanDebit")]
+    public void NotFoundIfToAccountNotFound()
+    {
+      var response = _testObject.GetAccountsAccountCanDebit(123);
+
+      Assert.IsInstanceOf<NotFoundResult>(response);
+    }
+
+    //-------------------------------------------------------------------------
+    
+    [Test]
+    [Category("GetAccountsAccountCanDebit")]
+    public void AllowedFromAccountsReturned()
+    {
+      _accountService.Setup(x => x.GetAccount(123)).Returns(new Account());
+      _accountService.Setup(x => x.GetAll()).Returns(new List<Account> { new Account(), new Account() }.AsQueryable);
+      _accountTypeService.Setup(x => x.IsTransferAllowed(It.IsAny<AccountType>(), It.IsAny<AccountType>())).Returns(true);
+
+      var response = (JsonResult<List<Account>>)_testObject.GetAccountsAccountCanDebit(123);
+
+      Assert.AreEqual(2, response.Content.Count);
     }
 
     //-------------------------------------------------------------------------

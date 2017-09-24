@@ -10,9 +10,10 @@ namespace BoozeHoundCloud
     protected void Application_Start()
     {
       AutoMapperConfig.Initialise();
-      AreaRegistration.RegisterAllAreas();
       GlobalConfiguration.Configure(WebApiConfig.Register);
       FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+      RouteTable.Routes.MapMvcAttributeRoutes();
+      AreaRegistration.RegisterAllAreas();
       RouteConfig.RegisterRoutes(RouteTable.Routes);
       BundleConfig.RegisterBundles(BundleTable.Bundles);
     }

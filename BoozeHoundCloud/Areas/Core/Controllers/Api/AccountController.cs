@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using AutoMapper;
@@ -15,6 +16,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
     //-------------------------------------------------------------------------
 
     private readonly IAccountService _accountService;
+    private readonly IAccountTypeService _accountTypeService;
 
     //-------------------------------------------------------------------------
 
@@ -24,18 +26,20 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
       var accounts = new GenericRepository<Account>(context);
       var accountTypes = new GenericRepository<AccountType>(context);
       var interAccountMappings = new GenericRepository<InterAccountTypeTransactionMapping>(context);
-      var accountTypeService = new AccountTypeService(interAccountMappings);
+      _accountTypeService = new AccountTypeService(interAccountMappings);
 
-      _accountService = new AccountService(accounts, accountTypes, accountTypeService);
+      _accountService = new AccountService(accounts, accountTypes, _accountTypeService);
     }
 
     //-------------------------------------------------------------------------
 
     // Constructor provided for unit-testing, could be removed if dependency injection is used.
 
-    internal AccountController(IAccountService accountService)
+    internal AccountController(IAccountService accountService,
+                               IAccountTypeService accountTypeService)
     {
       _accountService = accountService;
+      _accountTypeService = accountTypeService;
     }
 
     //-------------------------------------------------------------------------
@@ -69,6 +73,48 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
       var accountDto = Mapper.Map<Account, AccountDto>(account);
 
       return Ok(accountDto);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [HttpGet]
+    [Route("Api/Core/Account/CanCredit/{id:int}")]
+    public IHttpActionResult GetAccountsAccountCanCredit(int id)
+    {
+      Account fromAccount = _accountService.GetAccount(id);
+
+      if (fromAccount == null)
+      {
+        return NotFound();
+      }
+
+      List<Account> accounts =
+        _accountService.GetAll().Where(a =>
+            _accountTypeService.IsTransferAllowed(fromAccount.AccountType, a.AccountType))
+          .ToList();
+
+      return Json(accounts);
+    }
+
+    //-------------------------------------------------------------------------
+
+    [HttpGet]
+    [Route("Api/Core/Account/CanDebit/{id:int}")]
+    public IHttpActionResult GetAccountsAccountCanDebit(int id)
+    {
+      Account toAccount = _accountService.GetAccount(id);
+
+      if (toAccount == null)
+      {
+        return NotFound();
+      }
+
+      List<Account> accounts =
+        _accountService.GetAll().Where(a =>
+            _accountTypeService.IsTransferAllowed(a.AccountType, toAccount.AccountType))
+          .ToList();
+
+      return Json(accounts);
     }
 
     //-------------------------------------------------------------------------
