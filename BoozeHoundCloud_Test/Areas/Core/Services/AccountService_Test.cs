@@ -131,7 +131,7 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
       _accounts.Setup(x => x.Get(It.IsAny<Expression<Func<Account, bool>>>()))
         .Returns(new Account());
 
-      var newAccount = new AccountDto
+      var newAccount = new Account
       {
         Name = "New Account"
       };
@@ -157,7 +157,7 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
     [Category("AddAccount")]
     public void ExceptionIfTypeNotFound()
     {
-      var newAccount = new AccountDto
+      var newAccount = new Account
       {
         Name = "New Account",
         AccountTypeId = 1
@@ -189,7 +189,7 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
     [Category("AddAccount")]
     public void AccountRepositoryAddAndSaveCalled()
     {
-      var newAccount = new AccountDto
+      var newAccount = new Account
       {
         Name = "New Account",
         AccountTypeId = 1

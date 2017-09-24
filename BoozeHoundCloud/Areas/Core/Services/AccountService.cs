@@ -67,32 +67,28 @@ namespace BoozeHoundCloud.Areas.Core.Services
 
     //-------------------------------------------------------------------------
 
-    public Account AddAccount(AccountDto newAccount)
+    public void AddAccount(Account account)
     {
-      Account existingAccount = GetAccount(newAccount.Name);
+      Account existingAccount = GetAccount(account.Name);
 
       if (existingAccount != null)
       {
         throw new ArgumentException(
-          $"Account already exists with name '{newAccount.Name}'.",
-          nameof(newAccount.Name));
+          $"Account already exists with name '{account.Name}'.",
+          nameof(account.Name));
       }
 
-      AccountType accountType = _accountTypes.Get(newAccount.AccountTypeId);
+      AccountType accountType = _accountTypes.Get(account.AccountTypeId);
 
       if (accountType == null)
       {
         throw new ArgumentException(
-          $"AccountType not found for id {newAccount.AccountTypeId}.",
-          nameof(newAccount.AccountTypeId));
+          $"AccountType not found for id {account.AccountTypeId}.",
+          nameof(account.AccountTypeId));
       }
 
-      var createdAccount = Mapper.Map<AccountDto, Account>(newAccount);
-
-      _accounts.Add(createdAccount);
+      _accounts.Add(account);
       _accounts.Save();
-
-      return createdAccount;
     }
 
     //-------------------------------------------------------------------------

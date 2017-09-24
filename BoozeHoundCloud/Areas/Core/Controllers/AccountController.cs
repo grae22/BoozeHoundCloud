@@ -105,8 +105,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
       if (isNewAccount)
       {
-        var accountDto = Mapper.Map<Account, AccountDto>(account);
-        _accountService.AddAccount(accountDto);
+        _accountService.AddAccount(account);
       }
       else
       {

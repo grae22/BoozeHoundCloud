@@ -124,34 +124,20 @@ namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
     [Category("CreateAccount")]
     public void ServiceAddAccountCalled()
     {
-      _accountService.Setup(x => x.AddAccount(It.IsAny<AccountDto>()))
-        .Returns(new Account());
-
       var result = _testObject.CreateAccount(new AccountDto());
 
       Assert.IsInstanceOf<CreatedNegotiatedContentResult<Account>>(result);
 
-      _accountService.Verify(x => x.AddAccount(It.IsAny<AccountDto>()), Times.Once);
+      _accountService.Verify(x => x.AddAccount(It.IsAny<Account>()), Times.Once);
     }
 
     //-------------------------------------------------------------------------
-
-    [Test]
-    [Category("CreateAccount")]
-    public void BadRequestOnAccountServiceReturnsNullAccount()
-    {
-      var result = _testObject.CreateAccount(new AccountDto());
-
-      Assert.IsInstanceOf<BadRequestErrorMessageResult>(result);
-    }
-
-    //-------------------------------------------------------------------------
-
+    
     [Test]
     [Category("CreateAccount")]
     public void BadRequestOnAccountServiceException()
     {
-      _accountService.Setup(x => x.AddAccount(It.IsAny<AccountDto>()))
+      _accountService.Setup(x => x.AddAccount(It.IsAny<Account>()))
         .Throws<ArgumentException>();
 
       var result = _testObject.CreateAccount(new AccountDto());

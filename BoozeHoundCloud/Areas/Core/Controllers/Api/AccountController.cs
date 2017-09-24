@@ -124,17 +124,14 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
     {
       try
       {
-        Account newAccount = _accountService.AddAccount(accountDto);
+        var account = Mapper.Map<AccountDto, Account>(accountDto);
 
-        if (newAccount == null)
-        {
-          return BadRequest($"Failed to add new account '{accountDto.Name}'.");
-        }
+        _accountService.AddAccount(account);
 
         return Created(
           new Uri(
-            $"{Request.RequestUri}/{newAccount.Id}"),
-            newAccount);
+            $"{Request.RequestUri}/{account.Id}"),
+            account);
       }
       catch (ArgumentException ex)
       {
