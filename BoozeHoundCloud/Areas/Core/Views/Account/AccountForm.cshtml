@@ -48,8 +48,9 @@
     }
   </div>
 
-  @Html.HiddenFor(m => m.Id);
-  @Html.HiddenFor(m => m.AccountTypeId);
+  @Html.HiddenFor(m => m.Id)
+  @Html.HiddenFor(m => m.AccountTypeId)
+  @Html.HiddenFor(m => m.Balance)
   @Html.AntiForgeryToken()
 
   <button type="submit" class="btn btn-primary">Save</button>
