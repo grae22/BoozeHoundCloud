@@ -27,7 +27,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     //-------------------------------------------------------------------------
 
-    // GET: Core/Account
+    // Core/Account
     [HttpGet]
     public ActionResult Index()
     {
@@ -36,7 +36,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     //-------------------------------------------------------------------------
 
-    // GET: Core/Account/AccountsOfType?typeName=X
+    // Core/Account/AccountsOfType?typeName=X
     [HttpGet]
     public ActionResult AccountsOfType(string typeName)
     {
@@ -52,9 +52,9 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     //-------------------------------------------------------------------------
 
-    // GET: Core/Account/Create
+    // Core/Account/New
     [HttpGet]
-    public ActionResult Create()
+    public ActionResult New()
     {
       var viewModel = new AccountFormViewModel
       {
@@ -66,7 +66,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     //-------------------------------------------------------------------------
 
-    // GET: Core/Account/Edit
+    // Core/Account/Edit
     [HttpGet]
     public ActionResult Edit(int id)
     {
@@ -91,24 +91,17 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     //-------------------------------------------------------------------------
 
-    // GET: Core/Account/Save
+    // Core/Account/Save
     [HttpPost]
     [ValidateAntiForgeryToken]
     public ActionResult Save(Account account)
     {
       if (ModelState.IsValid == false)
       {
-        return Create();
+        return New();
       }
 
       bool isNewAccount = (account.Id == 0);
-
-      account.AccountType = _context.AccountTypes.FirstOrDefault(x => x.Id == account.AccountTypeId);
-
-      if (account.AccountType == null)
-      {
-        return HttpNotFound($"AccountType not found for if {account.AccountTypeId}.");
-      }
 
       if (isNewAccount)
       {

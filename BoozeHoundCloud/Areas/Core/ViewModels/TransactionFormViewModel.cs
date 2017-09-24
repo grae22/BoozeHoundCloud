@@ -36,8 +36,10 @@ namespace BoozeHoundCloud.Areas.Core.ViewModels
     [Required]
     public DateTime Date { get; set; }
 
+    [DisplayName("Created Timestamp")]
     public DateTime CreatedTimestamp { get; set; }
 
+    [DisplayName("Processed Timestamp")]
     public DateTime? ProcessedTimestamp { get; set; }
 
     public IList<Account> Accounts { get; set; }
