@@ -14,7 +14,7 @@ namespace BoozeHoundCloud.Areas.Core
       context.MapRoute(
         "Core_default",
         "Core/{controller}/{action}/{id}",
-        new {action = "Index", id = UrlParameter.Optional}
+        new { controller = "Transaction", action = "Index", id = UrlParameter.Optional }
       );
     }
   }
