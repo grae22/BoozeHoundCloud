@@ -22,7 +22,7 @@
 {
   <div class="form-group">
     @Html.LabelFor(m => m.Date)
-    @Html.TextBoxFor(m => m.Date, new { @class="form-control" })
+    @Html.TextBoxFor(m => m.Date, new { @class="form-control datepicker", @readonly = "true" })
     @Html.ValidationMessageFor(m => m.Date)
   </div>
   <div class="form-group">
@@ -115,6 +115,11 @@
   <script>
     $(document).ready(function ()
       {
+        $('.datepicker').datepicker(
+          {
+            'dateFormat': 'yy-mm-dd'
+          });
+
         $('#Date').val(FormatDateTimeForLocalTime($('#Date').val(), "YYYY-MM-DD"));
         $('#CreatedTimestamp').val(FormatDateTimeForLocalTime($('#CreatedTimestamp').val(), "YYYY-MM-DD HH:MM:SS"));
         $('#ProcessedTimestamp').val(FormatDateTimeForLocalTime($('#ProcessedTimestamp').val(), "YYYY-MM-DD HH:MM:SS"));

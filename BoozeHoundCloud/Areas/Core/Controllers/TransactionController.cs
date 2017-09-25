@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using System.Web.Http.Results;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using BoozeHoundCloud.Areas.Core.Models;
 using BoozeHoundCloud.Areas.Core.Services;
@@ -42,6 +42,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
     {
       var viewModel = new TransactionFormViewModel
       {
+        Date = DateTime.UtcNow,
         Accounts = _accountService.GetAll().ToList()
       };
 

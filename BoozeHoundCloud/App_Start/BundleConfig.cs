@@ -11,7 +11,8 @@ namespace BoozeHoundCloud
                   "~/Scripts/jquery-{version}.js",
                   "~/Scripts/moment.min.js",
                   "~/Scripts/DataTables/media/js/jquery.dataTables.js",
-                  "~/Scripts/DataTables/media/js/dataTables.bootstrap.js"));
+                  "~/Scripts/DataTables/media/js/dataTables.bootstrap.js",
+                  "~/Scripts/jquery-ui/jquery-ui.min.js"));
 
       bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                   "~/Scripts/jquery.validate*"));
@@ -28,7 +29,8 @@ namespace BoozeHoundCloud
       bundles.Add(new StyleBundle("~/Content/css").Include(
                   "~/Content/bootstrap.css",
                   "~/Content/site.css",
-                  "~/Content/datatables/media/css/datatables.bootstrap.css"));
+                  "~/Content/datatables/media/css/datatables.bootstrap.css",
+                  "~/Scripts/jquery-ui/jquery-ui.min.css"));
     }
   }
 }
