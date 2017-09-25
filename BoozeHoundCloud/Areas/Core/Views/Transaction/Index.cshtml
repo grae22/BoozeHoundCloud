@@ -36,8 +36,17 @@
                 return "<a href='/Core/Transaction/Edit/" + transaction.Id + "'>" + data + "</a>";
               }
           },
-          { data: 'Date' },
-          { data: 'Value' },
+          {
+            data: 'Date',
+            render: function (data)
+            {
+              return moment(data).format("YYYY-MM-DD");
+            }
+          },
+          {
+            data: 'Value',
+            render: $.fn.dataTable.render.number(',', '.', 2)
+          },
           { data: 'Reference' },
           { data: 'DebitAccount.Name' },
           { data: 'CreditAccount.Name' }

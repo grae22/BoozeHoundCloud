@@ -32,7 +32,10 @@
             }
           },
           { data: 'AccountType.Name' },
-          { data: 'Balance' }
+          {
+            data: 'Balance',
+            render: $.fn.dataTable.render.number(',', '.', 2)
+          }
         ]
       });
     });

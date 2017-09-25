@@ -9,6 +9,7 @@ namespace BoozeHoundCloud
     {
       bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                   "~/Scripts/jquery-{version}.js",
+                  "~/Scripts/moment.min.js",
                   "~/Scripts/DataTables/media/js/jquery.dataTables.js",
                   "~/Scripts/DataTables/media/js/dataTables.bootstrap.js"));
 

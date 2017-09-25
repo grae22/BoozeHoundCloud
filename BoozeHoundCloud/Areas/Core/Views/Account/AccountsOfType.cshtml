@@ -35,7 +35,10 @@
                 return "<a href='/Core/Account/Edit/" + account.Id + "'>" + data + "</a>";
               }
           },
-          { data: 'Balance' }
+          {
+            data: 'Balance',
+            render: $.fn.dataTable.render.number(',', '.', 2)
+          }
         ]
       });
     });
