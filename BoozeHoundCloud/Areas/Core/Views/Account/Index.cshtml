@@ -41,7 +41,14 @@
             render: $.fn.dataTable.render.number(',', '.', 2),
             className: 'dt-body-right'
           }
-        ]
+        ],
+        createdRow: function (row, data, index)
+          {
+            if (data.Balance < 0)
+            {
+              $('td', row).eq(2).addClass('negative-balance');
+            }
+          }
       });
     });
   </script>
