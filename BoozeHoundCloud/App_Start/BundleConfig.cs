@@ -30,6 +30,7 @@ namespace BoozeHoundCloud
                   "~/Content/bootstrap.css",
                   "~/Content/site.css",
                   "~/Content/datatables/media/css/datatables.bootstrap.css",
+                  "~/Content/DataTables/media/css/jquery.dataTables.min.css",
                   "~/Scripts/jquery-ui/jquery-ui.min.css"));
     }
   }
