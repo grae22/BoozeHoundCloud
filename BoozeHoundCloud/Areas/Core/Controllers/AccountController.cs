@@ -31,6 +31,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     // Core/Account
     [HttpGet]
+    [Authorize]
     public ActionResult Index()
     {
       return View("Index");
