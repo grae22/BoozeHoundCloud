@@ -41,6 +41,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     // Core/Account/AccountsOfType?typeName=X
     [HttpGet]
+    [Authorize]
     public ActionResult AccountsOfType(string typeName)
     {
       AccountType accountType = _context.AccountTypes.FirstOrDefault(x => x.Name.Equals(typeName));
@@ -57,6 +58,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     // Core/Account/New
     [HttpGet]
+    [Authorize]
     public ActionResult New()
     {
       var viewModel = new AccountFormViewModel
@@ -71,6 +73,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     // Core/Account/Edit
     [HttpGet]
+    [Authorize]
     public ActionResult Edit(int id)
     {
       Account account = _accountService.GetAccount(id);
@@ -96,6 +99,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
 
     // Core/Account/Save
     [HttpPost]
+    [Authorize]
     [ValidateAntiForgeryToken]
     public ActionResult Save(AccountDto accountDto)
     {
