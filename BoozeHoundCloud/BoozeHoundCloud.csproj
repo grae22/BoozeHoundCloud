@@ -250,6 +250,14 @@
     <Compile Include="Migrations\201709270448568_UserAddedToAccountModels.Designer.cs">
       <DependentUpon>201709270448568_UserAddedToAccountModels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709270501109_RequiredFieldsSetForAccounts.cs" />
+    <Compile Include="Migrations\201709270501109_RequiredFieldsSetForAccounts.Designer.cs">
+      <DependentUpon>201709270501109_RequiredFieldsSetForAccounts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709270510291_AccountNameMadeRequired.cs" />
+    <Compile Include="Migrations\201709270510291_AccountNameMadeRequired.Designer.cs">
+      <DependentUpon>201709270510291_AccountNameMadeRequired.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\IApplicationDbContext.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -632,6 +640,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709270448568_UserAddedToAccountModels.resx">
       <DependentUpon>201709270448568_UserAddedToAccountModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709270501109_RequiredFieldsSetForAccounts.resx">
+      <DependentUpon>201709270501109_RequiredFieldsSetForAccounts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709270510291_AccountNameMadeRequired.resx">
+      <DependentUpon>201709270510291_AccountNameMadeRequired.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
