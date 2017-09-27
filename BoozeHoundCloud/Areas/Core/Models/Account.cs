@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BoozeHoundCloud.Models;
 
 namespace BoozeHoundCloud.Areas.Core.Models
 {
@@ -11,6 +12,8 @@ namespace BoozeHoundCloud.Areas.Core.Models
     //-------------------------------------------------------------------------
 
     public int Id { get; set; }
+
+    public ApplicationUser User { get; set; }
 
     [MaxLength(NameMaxLength)]
     public string Name { get; set; }

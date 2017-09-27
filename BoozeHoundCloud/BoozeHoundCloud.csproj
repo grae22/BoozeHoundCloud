@@ -246,6 +246,10 @@
     <Compile Include="Migrations\201709161252477_SeedInterAccountTypeTransactionMappingTable.Designer.cs">
       <DependentUpon>201709161252477_SeedInterAccountTypeTransactionMappingTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709270448568_UserAddedToAccountModels.cs" />
+    <Compile Include="Migrations\201709270448568_UserAddedToAccountModels.Designer.cs">
+      <DependentUpon>201709270448568_UserAddedToAccountModels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\IApplicationDbContext.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -625,6 +629,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709161252477_SeedInterAccountTypeTransactionMappingTable.resx">
       <DependentUpon>201709161252477_SeedInterAccountTypeTransactionMappingTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709270448568_UserAddedToAccountModels.resx">
+      <DependentUpon>201709270448568_UserAddedToAccountModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

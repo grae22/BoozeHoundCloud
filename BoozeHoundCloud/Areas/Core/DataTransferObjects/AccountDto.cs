@@ -9,6 +9,8 @@ namespace BoozeHoundCloud.Areas.Core.DataTransferObjects
 
     public int Id { get; set; }
 
+    public int UserId { get; set; }
+
     [MaxLength(Account.NameMaxLength)]
     public string Name { get; set; }
 
