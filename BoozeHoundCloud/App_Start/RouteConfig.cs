@@ -17,8 +17,10 @@ namespace BoozeHoundCloud
           controller = "Home",
           action = "Index",
           id = UrlParameter.Optional
-        }
+        },
+        namespaces: new[] { "BoozeHoundCloud.Controllers" }
       );
+
     }
   }
 }
