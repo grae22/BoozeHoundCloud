@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using BoozeHoundCloud.Areas.Core.Models;
 
 namespace BoozeHoundCloud.Areas.Core.DataTransferObjects
@@ -9,7 +10,7 @@ namespace BoozeHoundCloud.Areas.Core.DataTransferObjects
 
     public int Id { get; set; }
 
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
 
     [MaxLength(Account.NameMaxLength)]
     public string Name { get; set; }

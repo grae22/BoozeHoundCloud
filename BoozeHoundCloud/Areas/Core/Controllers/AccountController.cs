@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using AutoMapper;
@@ -7,6 +8,7 @@ using BoozeHoundCloud.Areas.Core.Models;
 using BoozeHoundCloud.Areas.Core.Services;
 using BoozeHoundCloud.Areas.Core.ViewModels;
 using BoozeHoundCloud.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BoozeHoundCloud.Areas.Core.Controllers
 {
@@ -30,8 +32,8 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
     //-------------------------------------------------------------------------
 
     // Core/Account
-    [HttpGet]
-    [Authorize]
+    [System.Web.Mvc.HttpGet]
+    [System.Web.Mvc.Authorize]
     public ActionResult Index()
     {
       return View("Index");
@@ -40,8 +42,8 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
     //-------------------------------------------------------------------------
 
     // Core/Account/AccountsOfType?typeName=X
-    [HttpGet]
-    [Authorize]
+    [System.Web.Mvc.HttpGet]
+    [System.Web.Mvc.Authorize]
     public ActionResult AccountsOfType(string typeName)
     {
       AccountType accountType = _context.AccountTypes.FirstOrDefault(x => x.Name.Equals(typeName));
@@ -57,12 +59,13 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
     //-------------------------------------------------------------------------
 
     // Core/Account/New
-    [HttpGet]
-    [Authorize]
+    [System.Web.Mvc.HttpGet]
+    [System.Web.Mvc.Authorize]
     public ActionResult New()
     {
       var viewModel = new AccountFormViewModel
       {
+        UserId = Guid.Parse(User.Identity.GetUserId()),
         AccountTypes = _context.AccountTypes
       };
 
@@ -72,8 +75,8 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
     //-------------------------------------------------------------------------
 
     // Core/Account/Edit
-    [HttpGet]
-    [Authorize]
+    [System.Web.Mvc.HttpGet]
+    [System.Web.Mvc.Authorize]
     public ActionResult Edit(int id)
     {
       Account account = _accountService.GetAccount(id);
@@ -86,6 +89,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
       var viewModel = new AccountFormViewModel
       {
         Id = account.Id,
+        UserId = Guid.Parse(account.User.Id),
         Name = account.Name,
         AccountTypeId = account.AccountTypeId,
         AccountTypes = _context.AccountTypes,
@@ -98,14 +102,21 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
     //-------------------------------------------------------------------------
 
     // Core/Account/Save
-    [HttpPost]
-    [Authorize]
+    [System.Web.Mvc.HttpPost]
+    [System.Web.Mvc.Authorize]
     [ValidateAntiForgeryToken]
     public ActionResult Save(AccountDto accountDto)
     {
       if (ModelState.IsValid == false)
       {
         return New();
+      }
+
+      Guid currentUserId = Guid.Parse(User.Identity.GetUserId());
+
+      if (accountDto.UserId != currentUserId)
+      {
+        return new HttpUnauthorizedResult();
       }
 
       bool isNewAccount = (accountDto.Id == 0);

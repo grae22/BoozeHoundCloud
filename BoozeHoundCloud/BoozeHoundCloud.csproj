@@ -258,6 +258,14 @@
     <Compile Include="Migrations\201709270510291_AccountNameMadeRequired.Designer.cs">
       <DependentUpon>201709270510291_AccountNameMadeRequired.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709282004191_UserIdAddedToAccountModel.cs" />
+    <Compile Include="Migrations\201709282004191_UserIdAddedToAccountModel.Designer.cs">
+      <DependentUpon>201709282004191_UserIdAddedToAccountModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709282007464_RemovingRequiredAttribFromAccountFKs.cs" />
+    <Compile Include="Migrations\201709282007464_RemovingRequiredAttribFromAccountFKs.Designer.cs">
+      <DependentUpon>201709282007464_RemovingRequiredAttribFromAccountFKs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\IApplicationDbContext.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -646,6 +654,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709270510291_AccountNameMadeRequired.resx">
       <DependentUpon>201709270510291_AccountNameMadeRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709282004191_UserIdAddedToAccountModel.resx">
+      <DependentUpon>201709282004191_UserIdAddedToAccountModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709282007464_RemovingRequiredAttribFromAccountFKs.resx">
+      <DependentUpon>201709282007464_RemovingRequiredAttribFromAccountFKs.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
