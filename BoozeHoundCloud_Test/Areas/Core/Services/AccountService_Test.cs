@@ -6,7 +6,6 @@ using NUnit.Framework;
 using Moq;
 using BoozeHoundCloud;
 using BoozeHoundCloud.DataAccess;
-using BoozeHoundCloud.Areas.Core.DataTransferObjects;
 using BoozeHoundCloud.Areas.Core.Exceptions;
 using BoozeHoundCloud.Areas.Core.Models;
 using BoozeHoundCloud.Areas.Core.Services;
