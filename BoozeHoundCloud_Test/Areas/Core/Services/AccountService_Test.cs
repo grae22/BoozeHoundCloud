@@ -9,6 +9,7 @@ using BoozeHoundCloud.DataAccess;
 using BoozeHoundCloud.Areas.Core.Exceptions;
 using BoozeHoundCloud.Areas.Core.Models;
 using BoozeHoundCloud.Areas.Core.Services;
+using BoozeHoundCloud.Models;
 
 namespace BoozeHoundCloud_Test.Areas.Core.Services
 {
@@ -186,12 +187,49 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
 
     [Test]
     [Category("AddAccount")]
-    public void AccountRepositoryAddAndSaveCalled()
+    public void ExceptionIfUserNull()
     {
       var newAccount = new Account
       {
         Name = "New Account",
         AccountTypeId = 1
+      };
+
+      // Null account object will be returned for any search so we don't get
+      // "account already exists" error.
+      _accounts.Setup(x => x.Get(It.IsAny<Expression<Func<Account, bool>>>()))
+        .Returns<Account>(null);
+
+      // AccountType will be returned for account's type.
+      _accountTypes.Setup(x => x.Get(newAccount.AccountTypeId))
+        .Returns(new AccountType());
+
+      try
+      {
+        _testObject.AddAccount(newAccount);
+      }
+      catch (ArgumentException ex)
+      {
+        StringAssert.Contains("User cannot be null.", ex.Message);
+        _accounts.Verify(x => x.Add(It.IsAny<Account>()), Times.Never);
+        _accounts.Verify(x => x.Save(), Times.Never);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("AddAccount")]
+    public void AccountRepositoryAddAndSaveCalled()
+    {
+      var newAccount = new Account
+      {
+        Name = "New Account",
+        AccountTypeId = 1,
+        User = new ApplicationUser()
       };
 
       // Null account object will be returned for any search so we don't get
@@ -215,7 +253,7 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
     [Category("UpdateAccount")]
     public void UpdateAndSaveCalledOnRepo()
     {
-      var account = new Account { Name = "TestAccount" };
+      var account = new Account { Name = "TestAccount", User = new ApplicationUser() };
 
       _accounts.Setup(x => x.Get(account.Id)).Returns(account);
 
@@ -235,14 +273,16 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
       {
         Id = 123,
         Name = "SomeAccount",
-        AccountTypeId = 1
+        AccountTypeId = 1,
+        User = new ApplicationUser { Id = "123" }
       };
 
       var modifiedAccount = new Account
       {
         Id = originalAccount.Id,
         Name = "NewName",
-        AccountTypeId = originalAccount.AccountTypeId
+        AccountTypeId = originalAccount.AccountTypeId,
+        User = originalAccount.User
       };
 
       _accounts.Setup(x => x.Get(originalAccount.Id)).Returns(originalAccount);
@@ -278,7 +318,46 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
       }
       catch (BusinessLogicException ex)
       {
+        _accounts.Verify(x => x.Save(), Times.Never);
+
         Assert.AreEqual("AccountType cannot change.", ex.Message);
+        Assert.Pass();
+      }
+
+      Assert.Fail();
+    }
+
+    //-------------------------------------------------------------------------
+
+    [Test]
+    [Category("UpdateAccount")]
+    public void ExceptionIfUserChanges()
+    {
+      var originalAccount = new Account
+      {
+        Id = 123,
+        AccountTypeId = 1,
+        User = new ApplicationUser { Id = "123" }
+      };
+
+      var modifiedAccount = new Account
+      {
+        Id = originalAccount.Id,
+        AccountTypeId = originalAccount.AccountTypeId,
+        User = new ApplicationUser { Id = "456" }
+      };
+
+      try
+      {
+        _accounts.Setup(x => x.Get(originalAccount.Id)).Returns(originalAccount);
+
+        _testObject.UpdateAccount(modifiedAccount);
+      }
+      catch (BusinessLogicException ex)
+      {
+        _accounts.Verify(x => x.Save(), Times.Never);
+
+        Assert.AreEqual("User cannot change.", ex.Message);
         Assert.Pass();
       }
 
@@ -313,6 +392,8 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
       }
       catch (BusinessLogicException ex)
       {
+        _accounts.Verify(x => x.Save(), Times.Never);
+
         Assert.AreEqual("Balance cannot change.", ex.Message);
         Assert.Pass();
       }
@@ -329,19 +410,22 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
       var originalAccount = new Account
       {
         Id = 123,
-        Name = "TestName"
+        Name = "TestName",
+        User = new ApplicationUser { Id = "123" }
       };
 
       var modifiedAccount = new Account
       {
         Id = originalAccount.Id,
-        Name ="NewName"
+        Name ="NewName",
+        User = originalAccount.User
       };
 
       var anotherExistingAccount = new Account
       {
         Id = 321,
-        Name = modifiedAccount.Name
+        Name = modifiedAccount.Name,
+        User = originalAccount.User
       };
 
       try
@@ -353,6 +437,8 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
       }
       catch (BusinessLogicException ex)
       {
+        _accounts.Verify(x => x.Save(), Times.Never);
+
         Assert.AreEqual($"Account name '{modifiedAccount.Name}' is already in use.", ex.Message);
         Assert.Pass();
       }

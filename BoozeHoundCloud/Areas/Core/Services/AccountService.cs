@@ -86,6 +86,13 @@ namespace BoozeHoundCloud.Areas.Core.Services
           nameof(account.AccountTypeId));
       }
 
+      if (account.User == null)
+      {
+        throw new ArgumentException(
+          "User cannot be null.",
+          nameof(account.User));
+      }
+
       _accounts.Add(account);
       _accounts.Save();
     }
@@ -104,6 +111,11 @@ namespace BoozeHoundCloud.Areas.Core.Services
       if (originalAccount.Balance != modifiedAccount.Balance)
       {
         throw new BusinessLogicException("Balance cannot change.");
+      }
+
+      if (originalAccount.User.Id != modifiedAccount.User.Id)
+      {
+        throw new BusinessLogicException("User cannot change.");
       }
 
       bool hasNameChanged = !modifiedAccount.Name.Equals(originalAccount.Name);
