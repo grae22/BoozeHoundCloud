@@ -211,7 +211,9 @@
     <Compile Include="Areas\Core\Services\IAccountService.cs" />
     <Compile Include="Areas\Core\Services\IAccountTypeService.cs" />
     <Compile Include="Areas\Core\Services\ITransactionService.cs" />
+    <Compile Include="Areas\Core\Services\IUserService.cs" />
     <Compile Include="Areas\Core\Services\TransactionService.cs" />
+    <Compile Include="Areas\Core\Services\UserService.cs" />
     <Compile Include="Areas\Core\ViewModels\AccountFormViewModel.cs" />
     <Compile Include="Areas\Core\ViewModels\TransactionFormViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Microsoft.AspNet.Identity;
@@ -16,21 +17,19 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
   {
     //-------------------------------------------------------------------------
 
-    private readonly Api.AccountController _api;
-
     private readonly IApplicationDbContext _context;
     private readonly IAccountService _accountService;
     private readonly IAccountTypeService _accountTypeService;
+    private readonly IUserService _userService;
 
     //-------------------------------------------------------------------------
 
     public AccountController()
     {
-      _api = new Api.AccountController();
-
       _context = new ApplicationDbContext();
       _accountService = AccountService.Create(_context);
       _accountTypeService = AccountTypeService.Create(_context);
+      _userService = new UserService(_context);
     }
 
     //-------------------------------------------------------------------------
@@ -116,9 +115,10 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
         return New();
       }
 
-      Guid currentUserId = Guid.Parse(User.Identity.GetUserId());
+      var userId = new Guid(User.Identity.GetUserId());
+      ApplicationUser user = _userService.GetUser(userId);
 
-      if (accountDto.UserId != currentUserId)
+      if (accountDto.UserId != userId)
       {
         return new HttpUnauthorizedResult();
       }
@@ -128,6 +128,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
       var account = Mapper.Map<AccountDto, Account>(accountDto);
 
       account.AccountType = _accountTypeService.Get(accountDto.AccountTypeId);
+      account.User = user;
 
       if (account.AccountType == null)
       {
