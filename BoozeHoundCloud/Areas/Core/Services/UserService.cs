@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Web;
 using BoozeHoundCloud.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BoozeHoundCloud.Areas.Core.Services
 {
   public class UserService : IUserService
   {
     //-------------------------------------------------------------------------
+
+    public Guid CurrentUserId => new Guid(HttpContext.Current.User.Identity.GetUserId());
 
     private readonly ApplicationDbContext _context;
 

@@ -13,6 +13,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
     //-------------------------------------------------------------------------
 
     private readonly IApplicationDbContext _context;
+    private readonly IUserService _userService;
     private readonly ITransactionService _transactionService;
     private readonly IAccountService _accountService;
 
@@ -21,6 +22,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
     public TransactionController()
     {
       _context = new ApplicationDbContext();
+      _userService = new UserService(_context);
       _transactionService = TransactionService.Create(_context);
       _accountService = AccountService.Create(_context);
     }
@@ -43,7 +45,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
       var viewModel = new TransactionFormViewModel
       {
         Date = DateTime.UtcNow,
-        Accounts = _accountService.GetAll().ToList()
+        Accounts = _accountService.GetAll(_userService.CurrentUserId).ToList()
       };
 
       return View("TransactionForm", viewModel);
@@ -70,7 +72,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers
         DebitAccount = transaction.DebitAccount,
         CreditAccountId = transaction.CreditAccountId,
         CreditAccount = transaction.CreditAccount,
-        Accounts = _accountService.GetAll().ToList(),
+        Accounts = _accountService.GetAll(_userService.CurrentUserId).ToList(),
         Reference = transaction.Reference,
         Description = transaction.Description,
         Date = transaction.Date,

@@ -15,6 +15,7 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
   {
     //-------------------------------------------------------------------------
 
+    private readonly IUserService _userService;
     private readonly IAccountService _accountService;
     private readonly IAccountTypeService _accountTypeService;
 
@@ -26,8 +27,9 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
       var accounts = new GenericRepository<Account>(context);
       var accountTypes = new GenericRepository<AccountType>(context);
       var interAccountMappings = new GenericRepository<InterAccountTypeTransactionMapping>(context);
-      _accountTypeService = new AccountTypeService(accountTypes, interAccountMappings);
 
+      _userService = new UserService(context);
+      _accountTypeService = new AccountTypeService(accountTypes, interAccountMappings);
       _accountService = new AccountService(accounts, accountTypes, _accountTypeService);
     }
 
@@ -35,9 +37,11 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
 
     // Constructor provided for unit-testing, could be removed if dependency injection is used.
 
-    internal AccountController(IAccountService accountService,
+    internal AccountController(IUserService userService,
+                               IAccountService accountService,
                                IAccountTypeService accountTypeService)
     {
+      _userService = userService;
       _accountService = accountService;
       _accountTypeService = accountTypeService;
     }
@@ -47,14 +51,16 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
     [HttpGet]
     public IHttpActionResult GetAll(int? typeId = null)
     {
+      Guid userId = _userService.CurrentUserId;
+
       if (typeId == null)
       {
-        return Json(_accountService.GetAll());
+        return Json(_accountService.GetAll(userId));
       }
 
       return Json(
         _accountService
-          .GetAll()
+          .GetAll(userId)
           .Where(acc => acc.AccountType.Id == typeId));
     }
 
@@ -89,8 +95,9 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
       }
 
       List<Account> accounts =
-        _accountService.GetAll().Where(a =>
-            _accountTypeService.IsTransferAllowed(fromAccount.AccountType, a.AccountType))
+        _accountService
+          .GetAll(_userService.CurrentUserId)
+          .Where(a => _accountTypeService.IsTransferAllowed(fromAccount.AccountType, a.AccountType))
           .ToList();
 
       return Json(accounts);
@@ -110,8 +117,9 @@ namespace BoozeHoundCloud.Areas.Core.Controllers.Api
       }
 
       List<Account> accounts =
-        _accountService.GetAll().Where(a =>
-            _accountTypeService.IsTransferAllowed(a.AccountType, toAccount.AccountType))
+        _accountService
+          .GetAll(_userService.CurrentUserId)
+          .Where(a => _accountTypeService.IsTransferAllowed(a.AccountType, toAccount.AccountType))
           .ToList();
 
       return Json(accounts);

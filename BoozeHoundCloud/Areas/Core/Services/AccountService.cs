@@ -52,9 +52,11 @@ namespace BoozeHoundCloud.Areas.Core.Services
 
     //-------------------------------------------------------------------------
 
-    public IQueryable<Account> GetAll()
+    public IQueryable<Account> GetAll(Guid userId)
     {
-      return _accounts.Get();
+      return _accounts
+        .Get()
+        .Where(x => x.User.Id.Equals(userId.ToString()));
     }
 
     //-------------------------------------------------------------------------

@@ -82,19 +82,22 @@ namespace BoozeHoundCloud_Test.Areas.Core.Services
 
     [Test]
     [Category("GetAllAccounts")]
-    public void AllAccountsReturned()
+    public void AllAccountsReturnedForUser()
     {
+      Guid guid1 = Guid.NewGuid();
+      Guid guid2 = Guid.NewGuid();
+
       _accounts.Setup(x => x.Get()).Returns(
         new List<Account>
         {
-          new Account(),
-          new Account(),
-          new Account()
+          new Account { User = new ApplicationUser { Id = guid1.ToString() } },
+          new Account { User = new ApplicationUser { Id = guid2.ToString() } },
+          new Account { User = new ApplicationUser { Id = guid1.ToString() } }
         }.AsQueryable());
 
-      IQueryable<Account> result = _testObject.GetAll();
+      IQueryable<Account> result = _testObject.GetAll(guid1);
 
-      Assert.AreEqual(3, result.Count());
+      Assert.AreEqual(2, result.Count());
     }
 
     //-------------------------------------------------------------------------

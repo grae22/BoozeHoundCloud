@@ -20,6 +20,8 @@ namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
     //-------------------------------------------------------------------------
 
     private AccountController _testObject;
+    private Mock<IUserService> _userService;
+    private Guid _userId;
     private Mock<IAccountService> _accountService;
     private Mock<IAccountTypeService> _accountTypeService;
 
@@ -30,12 +32,18 @@ namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
     {
       AutoMapperConfig.Initialise();
 
+      _userService = new Mock<IUserService>();
       _accountService = new Mock<IAccountService>();
       _accountTypeService = new Mock<IAccountTypeService>();
 
-      _testObject = new AccountController(_accountService.Object, _accountTypeService.Object);
+      _userService.Setup(x => x.CurrentUserId).Returns(Guid.NewGuid());
 
-      _testObject.Request = new HttpRequestMessage(new HttpMethod("POST"), new Uri("http://localhost"));
+      _userId = _userService.Object.CurrentUserId;
+
+      _testObject = new AccountController(_userService.Object, _accountService.Object, _accountTypeService.Object)
+      {
+        Request = new HttpRequestMessage(new HttpMethod("POST"), new Uri("http://localhost"))
+      };
     }
 
     //-------------------------------------------------------------------------
@@ -66,7 +74,7 @@ namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
     [Category("GetAllAccounts")]
     public void OnlyAccountsOfSpecifiedTypeReturned()
     {
-      _accountService.Setup(x => x.GetAll())
+      _accountService.Setup(x => x.GetAll(_userId))
         .Returns(
           new[]
           {
@@ -163,7 +171,7 @@ namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
     public void AllowedToAccountsReturned()
     {
       _accountService.Setup(x => x.GetAccount(123)).Returns(new Account());
-      _accountService.Setup(x => x.GetAll()).Returns(new List<Account> { new Account(), new Account() }.AsQueryable);
+      _accountService.Setup(x => x.GetAll(_userId)).Returns(new List<Account> { new Account(), new Account() }.AsQueryable);
       _accountTypeService.Setup(x => x.IsTransferAllowed(It.IsAny<AccountType>(), It.IsAny<AccountType>())).Returns(true);
 
       var response = (JsonResult<List<Account>>)_testObject.GetAccountsAccountCanCredit(123);
@@ -189,7 +197,7 @@ namespace BoozeHoundCloud_Test.Areas.Core.Controllers.Api
     public void AllowedFromAccountsReturned()
     {
       _accountService.Setup(x => x.GetAccount(123)).Returns(new Account());
-      _accountService.Setup(x => x.GetAll()).Returns(new List<Account> { new Account(), new Account() }.AsQueryable);
+      _accountService.Setup(x => x.GetAll(_userId)).Returns(new List<Account> { new Account(), new Account() }.AsQueryable);
       _accountTypeService.Setup(x => x.IsTransferAllowed(It.IsAny<AccountType>(), It.IsAny<AccountType>())).Returns(true);
 
       var response = (JsonResult<List<Account>>)_testObject.GetAccountsAccountCanDebit(123);

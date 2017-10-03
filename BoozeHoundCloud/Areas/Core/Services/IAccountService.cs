@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using BoozeHoundCloud.Areas.Core.Models;
 
 namespace BoozeHoundCloud.Areas.Core.Services
@@ -7,7 +8,7 @@ namespace BoozeHoundCloud.Areas.Core.Services
   {
     //-------------------------------------------------------------------------
 
-    IQueryable<Account> GetAll();
+    IQueryable<Account> GetAll(Guid userId);
     Account GetAccount(int id);
     void AddAccount(Account account);
     void UpdateAccount(Account account);
